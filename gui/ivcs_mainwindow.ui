@@ -183,6 +183,19 @@
      <string>Commit</string>
     </property>
    </widget>
+   <widget class="QPushButton" name="ViewRemoteCommitButton">
+    <property name="geometry">
+     <rect>
+      <x>332</x>
+      <y>582</y>
+      <width>113</width>
+      <height>32</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>View Changes</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
