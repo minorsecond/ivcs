@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1024</width>
+    <height>640</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>IVCS</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QTextEdit" name="RemoteFileList">
+    <property name="geometry">
+     <rect>
+      <x>14</x>
+      <y>38</y>
+      <width>427</width>
+      <height>229</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>14</x>
+      <y>16</y>
+      <width>429</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Remote Files</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QTextEdit" name="LocalFileList">
+    <property name="geometry">
+     <rect>
+      <x>584</x>
+      <y>38</y>
+      <width>427</width>
+      <height>229</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_2">
+    <property name="geometry">
+     <rect>
+      <x>584</x>
+      <y>16</y>
+      <width>429</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Local Files</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="Line" name="line">
+    <property name="geometry">
+     <rect>
+      <x>506</x>
+      <y>38</y>
+      <width>16</width>
+      <height>547</height>
+     </rect>
+    </property>
+    <property name="orientation">
+     <enum>Qt::Vertical</enum>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="CheckoutButton">
+    <property name="geometry">
+     <rect>
+      <x>330</x>
+      <y>270</y>
+      <width>113</width>
+      <height>32</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Checkout</string>
+    </property>
+   </widget>
+   <widget class="Line" name="line_2">
+    <property name="geometry">
+     <rect>
+      <x>12</x>
+      <y>308</y>
+      <width>999</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="orientation">
+     <enum>Qt::Horizontal</enum>
+    </property>
+   </widget>
+   <widget class="QLabel" name="LocalChanges">
+    <property name="geometry">
+     <rect>
+      <x>584</x>
+      <y>330</y>
+      <width>429</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Local Changes</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QTextEdit" name="LocalChangeList">
+    <property name="geometry">
+     <rect>
+      <x>584</x>
+      <y>352</y>
+      <width>427</width>
+      <height>229</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLabel" name="LocalChanges_2">
+    <property name="geometry">
+     <rect>
+      <x>14</x>
+      <y>330</y>
+      <width>429</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Remote Changes</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QTextEdit" name="RemoteChangeList">
+    <property name="geometry">
+     <rect>
+      <x>14</x>
+      <y>352</y>
+      <width>427</width>
+      <height>229</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="PushButton">
+    <property name="geometry">
+     <rect>
+      <x>904</x>
+      <y>582</y>
+      <width>113</width>
+      <height>32</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Push</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="CommitButton">
+    <property name="geometry">
+     <rect>
+      <x>784</x>
+      <y>582</y>
+      <width>113</width>
+      <height>32</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Commit</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1024</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuFile">
+    <property name="title">
+     <string>File</string>
+    </property>
+    <addaction name="actionSettings"/>
+   </widget>
+   <widget class="QMenu" name="menuVCS">
+    <property name="title">
+     <string>VCS</string>
+    </property>
+    <addaction name="actionAdd_New_Directory"/>
+    <addaction name="actionAdd_New_File"/>
+    <addaction name="actionBranch"/>
+   </widget>
+   <addaction name="menuFile"/>
+   <addaction name="menuVCS"/>
+  </widget>
+  <action name="actionAdd_New_Directory">
+   <property name="text">
+    <string>Add New Directory</string>
+   </property>
+  </action>
+  <action name="actionAdd_New_File">
+   <property name="text">
+    <string>Add New File</string>
+   </property>
+  </action>
+  <action name="actionBranch">
+   <property name="text">
+    <string>Branch</string>
+   </property>
+  </action>
+  <action name="actionSettings">
+   <property name="text">
+    <string>Settings</string>
+   </property>
+  </action>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
