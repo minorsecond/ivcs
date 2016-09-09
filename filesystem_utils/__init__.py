@@ -89,14 +89,14 @@ class FileModifiedTimeGetter(QThread):
         def __del__(self):
             self.wait()
 
-    def run(self, file):
+    def run(self):
         """
         Gets last modified time for file
         :param file: file to check
         :return: a datetime object
         """
 
-        self.file_modified_time = os.path.getmtime(file)
+        self.file_modified_time = os.path.getmtime(self.file)
         self.file_modified_time = datetime.datetime.fromtimestamp(self.file_modified_time)
 
         return self.file_modified_time
