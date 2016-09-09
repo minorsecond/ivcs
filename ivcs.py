@@ -14,6 +14,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, backref, sessionmaker
 from database import ImageryDatabase
 from gui import commit_message_window, ivcs_mainwindow, settings_window, view_message_window
+import compressor
 
 
 class MainWindow(ivcs_mainwindow.QtGui.QMainWindow, ivcs_mainwindow.Ui_MainWindow):
@@ -22,6 +23,8 @@ class MainWindow(ivcs_mainwindow.QtGui.QMainWindow, ivcs_mainwindow.Ui_MainWindo
         ivcs_mainwindow.Ui_MainWindow.__init__(self)
         self.setupUi(self)
         # elf.setFixedHeight(self.size())
+
+        self.image_extensions = []
 
         # Create config file
         app_dir = get_application_path()
@@ -37,6 +40,54 @@ class MainWindow(ivcs_mainwindow.QtGui.QMainWindow, ivcs_mainwindow.Ui_MainWindo
             self.ViewRemoteCommitButton.setEnabled(False)
             self.CommitButton.setEnabled(False)
             self.PushButton.setEnabled(False)
+
+
+class SettingsWindow(settings_window.QtGui.QDialog, settings_window.Ui_Dialog):
+    """
+    Settings Window
+    """
+
+    def __init__(self):
+        settings_window.QtGui.QDialog.__init__(self)
+        settings_window.Ui_Dialog.__init__(self)
+        self.setupUi(self)
+        self.image_extensions = []
+
+        if self.ImgExtensionCheckBox.isChecked():
+            self.image_extensions.append('.img')
+
+        if self.TifExtensionCheckBox.isChecked():
+            self.image_extensions.append('.tif')
+
+
+class PathParser:
+    """
+    Contains the methods for hashing files and directories
+    """
+
+    def __init__(self, path, image_extensions):
+        self.path = path
+        self.image_extensions = image_extensions
+
+        self.files = []
+        self.subdirs = []
+
+    def walker(self):
+        """
+        Walks paths and files, and returns sets of files and directories
+        :return: sets of files and directories
+        """
+
+        for root, dirs, filenames in os.walk(self.path):
+            for subdir in dirs:
+                self.subdirs.append(os.path.join(root, subdir))
+
+            for file in filenames:
+                if os.path.splitext(file)[1] in self.image_extensions:
+                    self.files.append(os.path.join(root, file))
+
+        return self.files, self.subdirs
+
 
 def get_application_path():
     """

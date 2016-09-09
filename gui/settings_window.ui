@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>541</width>
-    <height>396</height>
+    <height>293</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,7 +17,7 @@
    <property name="geometry">
     <rect>
      <x>186</x>
-     <y>352</y>
+     <y>252</y>
      <width>341</width>
      <height>32</height>
     </rect>
@@ -81,17 +81,17 @@
     </rect>
    </property>
    <property name="text">
-    <string>Change Detection Method</string>
+    <string>Image Extensions</string>
    </property>
    <property name="alignment">
     <set>Qt::AlignCenter</set>
    </property>
   </widget>
-  <widget class="QCheckBox" name="checkBox">
+  <widget class="QCheckBox" name="ImgExtensionCheckBox">
    <property name="geometry">
     <rect>
      <x>36</x>
-     <y>208</y>
+     <y>192</y>
      <width>103</width>
      <height>20</height>
     </rect>
@@ -100,17 +100,69 @@
     <string>.img</string>
    </property>
   </widget>
-  <widget class="QCheckBox" name="checkBox_2">
+  <widget class="QCheckBox" name="TifExtensionCheckBox">
    <property name="geometry">
     <rect>
      <x>36</x>
-     <y>228</y>
+     <y>212</y>
      <width>103</width>
      <height>20</height>
     </rect>
    </property>
    <property name="text">
     <string>.tif</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_3">
+   <property name="geometry">
+    <rect>
+     <x>310</x>
+     <y>28</y>
+     <width>175</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>User</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="lineEdit">
+   <property name="geometry">
+    <rect>
+     <x>300</x>
+     <y>46</y>
+     <width>197</width>
+     <height>21</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_4">
+   <property name="geometry">
+    <rect>
+     <x>310</x>
+     <y>86</y>
+     <width>175</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Local Data Storage Path</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="lineEdit_2">
+   <property name="geometry">
+    <rect>
+     <x>300</x>
+     <y>104</y>
+     <width>197</width>
+     <height>21</height>
+    </rect>
    </property>
   </widget>
  </widget>
