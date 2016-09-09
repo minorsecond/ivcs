@@ -17,6 +17,7 @@ class Projects(Base):
     name = Column(String)
     working_directory = Column(String)
 
+
 class Directories(Base):
     """
     Stores the directory structures associated with projects
@@ -26,6 +27,7 @@ class Directories(Base):
     id = Column(Integer, primary_key=True, index=True)
     project_id = Column(Integer, ForeignKey("projects.id"))
     root = Column(String)
+
 
 class Imagery(Base):
     """
@@ -45,6 +47,7 @@ class Imagery(Base):
     image_last_scanned = Column(DateTime)
     image_on_disk = Column(Boolean)
 
+
 class Changelist(Base):
     """
     Stores all changes made to file
@@ -52,12 +55,13 @@ class Changelist(Base):
 
     __tablename__ = "changelist"
     id = Column(Integer)
-    uuid = Column(Integer, primary_key=True, index=True)
+    uuid = Column(String, primary_key=True, index=True)
     project_id = Column(Integer, ForeignKey("projects.id"))
     directory_id = Column(Integer, ForeignKey("directories.id"))
     image_id = Column(Integer, ForeignKey("imagery.id"))
     change_type = Column(Integer)  # 0->added 1-> modified 2-> deleted
     change_time = Column(DateTime)
+
 
 class Versions(Base):
     """
@@ -66,9 +70,26 @@ class Versions(Base):
 
     __tablename__ = "versions"
     id = Column(Integer)
-    uuid = Column(Integer, primary_key=True, index=True)
+    uuid = Column(String, primary_key=True, index=True)
     project_id = Column(Integer, ForeignKey("projects.id"))
     directory_id = Column(Integer, ForeignKey("directories.id"))
     image_id = Column(Integer, ForeignKey("imagery.id"))
     change_id = Column(String, ForeignKey("changelist.id"))
+    checkout_id = Column(Integer, ForeignKey("checkouts.id"))
     path_to_version = Column(String)
+    commit_message = Column(String)
+
+
+class Checkouts(Base):
+    """
+    Stores checkout status
+    """
+
+    __tablename__ = "checkouts"
+    id = Column(Integer)
+    uuid = Column(String, primary_key=True, index=True)
+    project_id = Column(Integer, ForeignKey("projects.id"))
+    image_id = Column(Integer, ForeignKey("imagery.id"))
+    is_checked_out = Column(Boolean)
+    checked_out_date = Column(DateTime)
+    checked_in_date = Column(DateTime)
