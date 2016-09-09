@@ -2,10 +2,17 @@
 Contains the SQL database definitions
 """
 
-from sqlalchemy import Column, Integer, String, Float, ForeignKey
+from sqlalchemy import Column, Integer, String, Float, ForeignKey, Table
 from sqlalchemy.types import DateTime, Boolean
 from sqlalchemy.orm import relationship
 from database.base import Base
+
+
+# This stores associations between tasks and projects (many to many)
+projects_associations = Table("tasks-projects_associations", Base.metadata,
+                          Column("project_id", Integer, ForeignKey("projects.id")),
+                          Column("task_id", Integer, ForeignKey("tasklist.id"))
+                              )
 
 
 class Users(Base):
@@ -28,6 +35,9 @@ class Projects(Base):
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String)
     working_directory = Column(String)
+    tasks = relationship("tasklist",
+                         secondary=projects_associations,
+                         backref="projects")
 
 
 class Directories(Base):
@@ -112,7 +122,8 @@ class Tasklists(Base):
     Stores tasks that are repeated (for drop-down menu)
     """
 
-    __tablename__ = "tasklits"
+    __tablename__ = "tasklist"
     id = Column(Integer, primary_key=True)
     taskname = Column(String)
     task_description = Column(String)
+    task_output_directory = Column(String)

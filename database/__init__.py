@@ -1,6 +1,6 @@
 from database.base import Base
 from database.models import Projects, Directories, Imagery, Changelist, Versions, Checkouts, \
-    Tasklists
+    Tasklists, projects_associations
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from os.path import join
