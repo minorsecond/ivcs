@@ -24,7 +24,6 @@ class MainWindow(ivcs_mainwindow.QtGui.QMainWindow, ivcs_mainwindow.Ui_MainWindo
         ivcs_mainwindow.QtGui.QMainWindow.__init__(self)
         ivcs_mainwindow.Ui_MainWindow.__init__(self)
         self.setupUi(self)
-        # elf.setFixedHeight(self.size())
 
         self.image_extensions = []
 
@@ -33,10 +32,10 @@ class MainWindow(ivcs_mainwindow.QtGui.QMainWindow, ivcs_mainwindow.Ui_MainWindo
         if not os.path.exists(os.path.join(app_dir, 'ivcs.ini')):
 
             # Disable all GUI elements until a branch is set and scanned
-            self.RemoteFileList.setEnabled(False)
-            self.LocalFileList.setEnabled(False)
-            self.RemoteChangeList.setEnabled(False)
-            self.LocalChangeList.setEnabled(False)
+            self.RemoteChangesListView.setEnabled(False)
+            self.LocalFileListVIew.setEnabled(False)
+            self.RemoteChangesListView.setEnabled(False)
+            self.LocalChangesListView.setEnabled(False)
 
             self.CheckoutButton.setEnabled(False)
             self.ViewRemoteCommitButton.setEnabled(False)
@@ -45,10 +44,21 @@ class MainWindow(ivcs_mainwindow.QtGui.QMainWindow, ivcs_mainwindow.Ui_MainWindo
 
         # Menu Bar Actions
         self.actionSettings.triggered.connect(self.handle_settings_click)
+        self.menuBranch.triggered.connect(self.handle_new_branch_click)
 
     def handle_settings_click(self):
         """
         Handles user clicking the settings button in the menu bar
+        :return: None
+        """
+
+        settings = SettingsWindow()
+        settings.show()
+        settings.exec_()
+
+    def handle_new_branch_click(self):
+        """
+        Handles user clicking the new branch button in the menu bar
         :return: None
         """
 
@@ -64,13 +74,55 @@ class SettingsWindow(settings_window.QtGui.QDialog, settings_window.Ui_Dialog):
         settings_window.QtGui.QDialog.__init__(self)
         settings_window.Ui_Dialog.__init__(self)
         self.setupUi(self)
-        self.image_extensions = []
+        self.image_extensions = {}
+        self.username = None
+        self.storage_path = None
+        self.change_detection_method = None
 
-        if self.ImgExtensionCheckBox.isChecked():
-            self.image_extensions.append('.img')
+        # Buttonbox actions
+        self.buttonBox.button(settings_window.QtGui.QDialogButtonBox.Ok).clicked.connect(self.save_settings)
 
-        if self.TifExtensionCheckBox.isChecked():
-            self.image_extensions.append('.tif')
+    def save_settings(self):
+        """
+        Save settings into the .ini file
+        :return: None
+        """
+
+        image_type_checkboxes = [self.ImgExtensionCheckBox, self.TifExtensionCheckBox]
+
+        if self.UseChecksums.isChecked():
+            self.change_detection_method = "hash"
+        elif self.UseOSModifiedDate.isChecked():
+            self.change_detection_method = "modification_time"
+
+        for checkbox in image_type_checkboxes:  # Todo: test this
+            if checkbox.isChecked():
+                self.image_extensions[checkbox.text()] = True
+
+        self.username = self.UserNameEntry.text()
+        self.storage_path = self.DataStoragePathEntry.text()
+
+        self.write_config()
+
+    def write_config(self):
+        """
+        Saves the new settings to the configuration file
+        :return: Disk IO
+        """
+        app_dir = get_application_path()
+        config_file_path = os.path.join(app_dir, 'ivcs.ini')
+
+        config = configparser.ConfigParser()
+
+        # Set default options
+        config['DEFAULT'] = {"ImageExtensions": self.image_extensions,
+                             "ChangeDetectMethod": self.change_detection_method,
+                             "Username": self.username,
+                             "DataPath": self.storage_path}
+
+        with open(config_file_path, 'w') as configfile:
+            config.write(configfile)
+
 
 
 class IoThread(QThread):

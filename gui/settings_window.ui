@@ -33,12 +33,22 @@
    <property name="geometry">
     <rect>
      <x>26</x>
-     <y>43</y>
-     <width>216</width>
-     <height>99</height>
+     <y>12</y>
+     <width>227</width>
+     <height>101</height>
     </rect>
    </property>
    <layout class="QVBoxLayout" name="verticalLayout">
+    <item>
+     <widget class="QLabel" name="label">
+      <property name="text">
+       <string>Change Detection Method</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+     </widget>
+    </item>
     <item>
      <widget class="QRadioButton" name="UseChecksums">
       <property name="text">
@@ -55,68 +65,10 @@
     </item>
    </layout>
   </widget>
-  <widget class="QLabel" name="label">
-   <property name="geometry">
-    <rect>
-     <x>24</x>
-     <y>24</y>
-     <width>213</width>
-     <height>16</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Change Detection Method</string>
-   </property>
-   <property name="alignment">
-    <set>Qt::AlignCenter</set>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_2">
-   <property name="geometry">
-    <rect>
-     <x>24</x>
-     <y>162</y>
-     <width>202</width>
-     <height>27</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Image Extensions</string>
-   </property>
-   <property name="alignment">
-    <set>Qt::AlignCenter</set>
-   </property>
-  </widget>
-  <widget class="QCheckBox" name="ImgExtensionCheckBox">
-   <property name="geometry">
-    <rect>
-     <x>36</x>
-     <y>192</y>
-     <width>103</width>
-     <height>20</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>.img</string>
-   </property>
-  </widget>
-  <widget class="QCheckBox" name="TifExtensionCheckBox">
-   <property name="geometry">
-    <rect>
-     <x>36</x>
-     <y>212</y>
-     <width>103</width>
-     <height>20</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>.tif</string>
-   </property>
-  </widget>
   <widget class="QLabel" name="label_3">
    <property name="geometry">
     <rect>
-     <x>310</x>
+     <x>290</x>
      <y>28</y>
      <width>175</width>
      <height>16</height>
@@ -129,10 +81,10 @@
     <set>Qt::AlignCenter</set>
    </property>
   </widget>
-  <widget class="QLineEdit" name="lineEdit">
+  <widget class="QLineEdit" name="UserNameEntry">
    <property name="geometry">
     <rect>
-     <x>300</x>
+     <x>280</x>
      <y>46</y>
      <width>197</width>
      <height>21</height>
@@ -142,7 +94,7 @@
   <widget class="QLabel" name="label_4">
    <property name="geometry">
     <rect>
-     <x>310</x>
+     <x>290</x>
      <y>86</y>
      <width>175</width>
      <height>16</height>
@@ -155,15 +107,64 @@
     <set>Qt::AlignCenter</set>
    </property>
   </widget>
-  <widget class="QLineEdit" name="lineEdit_2">
+  <widget class="QLineEdit" name="DataStoragePathEntry">
    <property name="geometry">
     <rect>
-     <x>300</x>
+     <x>280</x>
      <y>104</y>
      <width>197</width>
      <height>21</height>
     </rect>
    </property>
+  </widget>
+  <widget class="QPushButton" name="BrowseDataStoragePath">
+   <property name="geometry">
+    <rect>
+     <x>488</x>
+     <y>98</y>
+     <width>29</width>
+     <height>32</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>...</string>
+   </property>
+  </widget>
+  <widget class="QWidget" name="verticalLayoutWidget_2">
+   <property name="geometry">
+    <rect>
+     <x>26</x>
+     <y>132</y>
+     <width>227</width>
+     <height>103</height>
+    </rect>
+   </property>
+   <layout class="QVBoxLayout" name="verticalLayout_2">
+    <item>
+     <widget class="QLabel" name="label_2">
+      <property name="text">
+       <string>Image Extensions</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QCheckBox" name="ImgExtensionCheckBox">
+      <property name="text">
+       <string>.img</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QCheckBox" name="TifExtensionCheckBox">
+      <property name="text">
+       <string>.tif</string>
+      </property>
+     </widget>
+    </item>
+   </layout>
   </widget>
  </widget>
  <resources/>

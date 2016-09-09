@@ -218,7 +218,7 @@
     </property>
     <widget class="QMenu" name="menuBranch">
      <property name="title">
-      <string>CreateBranch</string>
+      <string>Create Branch</string>
      </property>
     </widget>
     <addaction name="actionAdd_New_Directory"/>
