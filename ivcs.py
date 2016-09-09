@@ -72,6 +72,7 @@ class FileParser:
 
         self.files = []
         self.subdirs = []
+        self.file_modified_time = None
 
     def walker(self):
         """
@@ -91,8 +92,9 @@ class FileParser:
 
     def file_hasher(self, file):
         """
-        Generates SHA256 for path.
-        :return:
+        Generates SHA256 for file.
+        :param file: file to check
+        :return: an sha256 hex
         """
 
         sha = hashlib.sha256()
@@ -106,6 +108,18 @@ class FileParser:
                     break
 
         return sha.hexdigest()
+
+    def last_modified_time(self, file):
+        """
+        Gets last modified time for file
+        :param file: file to check
+        :return: a datetime object
+        """
+
+        self.file_modified_time = os.path.getmtime(file)
+        self.file_modified_time = datetime.datetime.fromtimestamp(self.file_modified_time)
+
+        return self.file_modified_time
 
 
 def get_application_path():
