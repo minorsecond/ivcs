@@ -6,6 +6,7 @@ Imagery Version Control System
 import os
 import configparser
 import sys
+import ast
 import shutil
 import hashlib
 import datetime
@@ -74,10 +75,36 @@ class SettingsWindow(settings_window.QtGui.QDialog, settings_window.Ui_Dialog):
         settings_window.QtGui.QDialog.__init__(self)
         settings_window.Ui_Dialog.__init__(self)
         self.setupUi(self)
-        self.image_extensions = {}
+        self.image_extensions = []
         self.username = None
         self.storage_path = None
         self.change_detection_method = None
+
+        # Load current settings
+        self.app_dir = get_application_path()
+        self.config_file_path = os.path.join(self.app_dir, 'ivcs.ini')
+        self.config = configparser.ConfigParser()
+        self.config.read(self.config_file_path)
+
+        self.change_detection_method = self.config.get("settings", "changedetectmethod")
+        self.username = self.config.get("settings", "username")
+        self.image_extensions = ast.literal_eval(self.config.get("settings", "imageextensions"))
+        self.storage_path = self.config.get("settings", "datapath")
+
+        if self.change_detection_method == "hash":
+            self.UseChecksums.setChecked(True)
+        elif self.change_detection_method == "modification_time":
+            self.UseOSModifiedDate.setChecked(True)
+        else:
+            raise ValueError
+
+        if ".img" in self.image_extensions:
+            self.ImgExtensionCheckBox.setChecked(True)
+        if ".tif" in self.image_extensions:
+            self.TifExtensionCheckBox.setChecked(True)
+
+        self.UserNameEntry.setText(self.username)
+        self.DataStoragePathEntry.setText(self.storage_path)
 
         # Buttonbox actions
         self.buttonBox.button(settings_window.QtGui.QDialogButtonBox.Ok).clicked.connect(self.save_settings)
@@ -87,6 +114,10 @@ class SettingsWindow(settings_window.QtGui.QDialog, settings_window.Ui_Dialog):
         Save settings into the .ini file
         :return: None
         """
+        self.image_extensions = []
+        self.change_detection_method = None
+        self.username = None
+        self.storage_path = None
 
         image_type_checkboxes = [self.ImgExtensionCheckBox, self.TifExtensionCheckBox]
 
@@ -97,32 +128,37 @@ class SettingsWindow(settings_window.QtGui.QDialog, settings_window.Ui_Dialog):
 
         for checkbox in image_type_checkboxes:  # Todo: test this
             if checkbox.isChecked():
-                self.image_extensions[checkbox.text()] = True
+                text = checkbox.text()
+                if text not in self.image_extensions:
+                    self.image_extensions.append(checkbox.text())
 
         self.username = self.UserNameEntry.text()
         self.storage_path = self.DataStoragePathEntry.text()
 
-        self.write_config()
+        # Make sure all fields contain a value before writing to file
+        if self.UseChecksums or self.UseOSModifiedDate:
+            if self.ImgExtensionCheckBox or self.TifExtensionCheckBox:
+                if len(self.UserNameEntry.text()) >= 2:
+                    if len(self.DataStoragePathEntry.text()) >= 2 :
+                        try:
+                            self.write_config()
+                        except Exception as e:
+                            print(e)
 
     def write_config(self):
         """
         Saves the new settings to the configuration file
         :return: Disk IO
         """
-        app_dir = get_application_path()
-        config_file_path = os.path.join(app_dir, 'ivcs.ini')
-
-        config = configparser.ConfigParser()
 
         # Set default options
-        config['DEFAULT'] = {"ImageExtensions": self.image_extensions,
-                             "ChangeDetectMethod": self.change_detection_method,
-                             "Username": self.username,
-                             "DataPath": self.storage_path}
+        self.config['settings'] = {"username": self.username,
+                                   "ImageExtensions": self.image_extensions,
+                                   "ChangeDetectMethod": self.change_detection_method,
+                                   "DataPath": self.storage_path}
 
-        with open(config_file_path, 'w') as configfile:
-            config.write(configfile)
-
+        with open(self.config_file_path, 'w') as configfile:
+            self.config.write(configfile)
 
 
 class IoThread(QThread):
@@ -170,11 +206,10 @@ def initialize_config(path):
     config = configparser.ConfigParser()
 
     # Set default options
-    config['DEFAULT'] = {"ImageExtensions": ['.img', '.tif'],
-                         "ChangeDetectMethod": "Timestamp",
-                         "Username": "UNSET"}
-
-    config['BRANCHES'] = {"TestBranch": "~/DEV/ivcs/testBranch"}
+    config['settings'] = {"ImageExtensions": ['.img', '.tif'],
+                         "ChangeDetectMethod": "modification_time",
+                         "Username": "UNSET",
+                          "datapath": "~"}
 
     with open(config_file_path, 'w') as configfile:
         config.write(configfile)
