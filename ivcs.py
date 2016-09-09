@@ -68,6 +68,7 @@ class FileParser:
     def __init__(self, path, image_extensions):
         self.path = path
         self.image_extensions = image_extensions
+        self.hash_chunksize = 4096
 
         self.files = []
         self.subdirs = []
@@ -87,6 +88,24 @@ class FileParser:
                     self.files.append(os.path.join(root, file))
 
         return self.files, self.subdirs
+
+    def file_hasher(self, file):
+        """
+        Generates SHA256 for path.
+        :return:
+        """
+
+        sha = hashlib.sha256()
+
+        with open(file, 'rb') as f:
+            while True:
+                data = f.read(self.hash_chunksize)
+                if data:
+                    sha.update(data)
+                else:
+                    break
+
+        return sha.hexdigest()
 
 
 def get_application_path():
