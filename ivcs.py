@@ -43,6 +43,17 @@ class MainWindow(ivcs_mainwindow.QtGui.QMainWindow, ivcs_mainwindow.Ui_MainWindo
             self.CommitButton.setEnabled(False)
             self.PushButton.setEnabled(False)
 
+        # Menu Bar Actions
+        self.actionSettings.triggered.connect(self.handle_settings_click)
+
+    def handle_settings_click(self):
+        """
+        Handles user clicking the settings button in the menu bar
+        :return: None
+        """
+
+        pass
+
 
 class SettingsWindow(settings_window.QtGui.QDialog, settings_window.Ui_Dialog):
     """
