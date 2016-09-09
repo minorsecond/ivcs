@@ -90,3 +90,13 @@ ENV/
 # Rope project settings
 .ropeproject
 
+# Custom
+.idea/vcs.xml
+.idea/workspace.xml
+gui/CheckoutStatus.py
+gui/CreateBranchWindow.py
+gui/commit_message_window.py
+gui/ivcs_mainwindow.py
+gui/settings_window.py
+gui/view_message_window.py
+ivcs.ini
