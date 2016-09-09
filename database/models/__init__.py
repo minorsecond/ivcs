@@ -4,7 +4,19 @@ Contains the SQL database definitions
 
 from sqlalchemy import Column, Integer, String, Float, ForeignKey
 from sqlalchemy.types import DateTime, Boolean
+from sqlalchemy.orm import relationship
 from database.base import Base
+
+
+class Users(Base):
+    """
+    Stores usernames
+    """
+
+    __tablename__ = "users"
+    id = Column(Integer, primary_key=True, index=True)
+    username = Column(String)
+    checkouts = relationship("checkouts", back_populates="checkouts")
 
 
 class Projects(Base):
@@ -90,6 +102,17 @@ class Checkouts(Base):
     uuid = Column(String, primary_key=True, index=True)
     project_id = Column(Integer, ForeignKey("projects.id"))
     image_id = Column(Integer, ForeignKey("imagery.id"))
-    is_checked_out = Column(Boolean)
+    checked_out_by = relationship("users", back_populates="checkouts")
     checked_out_date = Column(DateTime)
     checked_in_date = Column(DateTime)
+
+
+class Tasklists(Base):
+    """
+    Stores tasks that are repeated (for drop-down menu)
+    """
+
+    __tablename__ = "tasklits"
+    id = Column(Integer, primary_key=True)
+    taskname = Column(String)
+    task_description = Column(String)

@@ -9,6 +9,10 @@ import sys
 import shutil
 import hashlib
 import datetime
+from sqlalchemy import create_engine
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import relationship, backref, sessionmaker
+from database import ImageryDatabase
 from gui import commit_message_window, ivcs_mainwindow, settings_window, view_message_window
 
 
@@ -73,6 +77,18 @@ def initialize_config(path):
         config.write(configfile)
 
 
+def db_init(path):
+    """
+    Initializes the database
+    :return: SQLAlchemy session object
+    """
+
+    imagery_database = ImageryDatabase(path)
+    db_session = imagery_database.load_session()  # Get the session object
+
+    return db_session
+
+
 def main():
     """
     Starts the program
@@ -81,6 +97,9 @@ def main():
 
     # Create config file
     app_dir = get_application_path()
+
+    # Set up DB
+    db_init(app_dir)
 
     if not os.path.exists(os.path.join(app_dir, 'ivcs.ini')):
         initialize_config(app_dir)
