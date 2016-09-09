@@ -60,7 +60,7 @@ class SettingsWindow(settings_window.QtGui.QDialog, settings_window.Ui_Dialog):
             self.image_extensions.append('.tif')
 
 
-class PathParser:
+class FileParser:
     """
     Contains the methods for hashing files and directories
     """
