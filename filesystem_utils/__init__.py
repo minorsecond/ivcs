@@ -6,6 +6,11 @@ import os
 import datetime
 import hashlib
 from PyQt4.QtCore import QThread
+import platform
+
+if platform.system == "Windows":
+    # These are for creating hidden files
+    import win32api, win32con, os
 
 
 class FileSystemWalker(QThread):
@@ -100,3 +105,21 @@ class FileModifiedTimeGetter(QThread):
         self.file_modified_time = datetime.datetime.fromtimestamp(self.file_modified_time)
 
         return self.file_modified_time
+
+
+class GeneralFunctions:
+    """
+    Functions that don't need to be threaded
+    """
+
+    def __init__(self, file):
+        self.file = file
+
+    def hide_file(self):
+        """
+        Hides files in windows
+        :return:
+        """
+
+        if platform.system == "Windows":
+            win32api.SetFileAttributes(self.file, win32con.FILE_ATTRIBUTE_HIDDEN)
