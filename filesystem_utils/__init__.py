@@ -5,8 +5,11 @@ Utilities for parsing files, creating hashes, etc.
 import os
 import datetime
 import hashlib
-from PyQt4.QtCore import QThread
+from PyQt4.QtCore import QThread, SIGNAL, SLOT, QUrl, pyqtSignal, QObject
+from PyQt4.QtNetwork import QNetworkAccessManager, QNetworkRequest
 import platform
+from ivcs import CheckoutStatusWindow
+from gui import CheckoutStatus
 
 if platform.system == "Windows":
     # These are for creating hidden files
@@ -91,8 +94,8 @@ class FileModifiedTimeGetter(QThread):
         self.file = file
         self.file_modified_time = None
 
-        def __del__(self):
-            self.wait()
+    def __del__(self):
+        self.wait()
 
     def run(self):
         """
@@ -105,6 +108,36 @@ class FileModifiedTimeGetter(QThread):
         self.file_modified_time = datetime.datetime.fromtimestamp(self.file_modified_time)
 
         return self.file_modified_time
+
+
+class FileCopier(QObject):
+    """
+    Copies files from network
+    """
+
+    finished = pyqtSignal()
+
+    def __init__(self, file):
+        super(FileCopier, self).__init__()
+        #self.file = QUrl("file://{}".format(file))
+        self.file = QUrl("http://ipv4.download.thinkbroadband.com/1GB.zip")
+        self.manager = QNetworkAccessManager(self)
+        self.connect(self.manager, SIGNAL("finished(QNetworkReply*)"), self.reply_finished)
+
+    def reply_finished(self, reply):
+        checkout_class = CheckoutStatusWindow()
+        self.connect(reply, SIGNAL("downloadProgress(int, int)"), checkout_class.update_progress_bar)
+        self.reply = reply
+        checkout_class.progressBar.setMaximum(reply.size())
+        print("finished")
+
+    def run(self):
+        """
+        Start the download
+        :return: None
+        """
+        self.manager.get(QNetworkRequest(self.file))
+        self.finished.emit()
 
 
 class GeneralFunctions:

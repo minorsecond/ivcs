@@ -15,7 +15,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, backref, sessionmaker
 from database import ImageryDatabase
-from gui import commit_message_window, ivcs_mainwindow, settings_window, view_message_window
+from gui import commit_message_window, ivcs_mainwindow, settings_window, view_message_window, CheckoutStatus
 import compressor
 import filesystem_utils
 
@@ -162,6 +162,29 @@ class SettingsWindow(settings_window.QtGui.QDialog, settings_window.Ui_Dialog):
             self.config.write(configfile)
 
 
+class CheckoutStatusWindow(CheckoutStatus.QtGui.QDialog, CheckoutStatus.Ui_Dialog):
+    """
+    Status window for checking out files
+    """
+
+    def __init__(self):
+        super(CheckoutStatusWindow, self).__init__()
+        CheckoutStatus.QtGui.QDialog.__init__(self)
+        CheckoutStatus.Ui_Dialog.__init__(self)
+        self.setupUi(self)
+
+    def update_progress_bar(self, read, total):
+        """
+        Updates the progress bar
+        :param read: Amount read (int)
+        :param total: Total length(int)
+        :return: None
+        """
+
+        print("Read: {}".format(read))
+        print("Total: {}".format(total))
+
+
 class IoThread(QThread):
     """
     Run the disk IO functions in a separate thread
@@ -233,6 +256,10 @@ def main():
     Starts the program
     :return: None
     """
+
+    # TESTING
+    io = filesystem_utils.FileCopier("/Users/rwardrup/Downloads/pycharm-professional-2016.2.3.dmg")
+    io.run()
 
     # Create config file
     app_dir = get_application_path()
