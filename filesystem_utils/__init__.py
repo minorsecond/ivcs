@@ -5,11 +5,11 @@ Utilities for parsing files, creating hashes, etc.
 import os
 import datetime
 import hashlib
-from PyQt4.QtCore import QThread, SIGNAL, SLOT, QUrl, pyqtSignal, QObject
+from PyQt4.QtCore import QThread, SIGNAL, QUrl, pyqtSignal, QObject
 from PyQt4.QtNetwork import QNetworkAccessManager, QNetworkRequest
 import platform
 from ivcs import CheckoutStatusWindow
-from gui import CheckoutStatus
+
 
 if platform.system == "Windows":
     # These are for creating hidden files
@@ -119,8 +119,7 @@ class FileCopier(QObject):
 
     def __init__(self, file):
         super(FileCopier, self).__init__()
-        #self.file = QUrl("file://{}".format(file))
-        self.file = QUrl("http://ipv4.download.thinkbroadband.com/1GB.zip")
+        self.file = QUrl("file:///{}".format(file))
         self.manager = QNetworkAccessManager(self)
         self.connect(self.manager, SIGNAL("finished(QNetworkReply*)"), self.reply_finished)
 
@@ -129,7 +128,6 @@ class FileCopier(QObject):
         self.connect(reply, SIGNAL("downloadProgress(int, int)"), checkout_class.update_progress_bar)
         self.reply = reply
         checkout_class.progressBar.setMaximum(reply.size())
-        print("finished")
 
     def run(self):
         """
