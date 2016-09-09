@@ -9,6 +9,7 @@ import sys
 import shutil
 import hashlib
 import datetime
+from PyQt4.QtCore import QThread
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, backref, sessionmaker
@@ -59,6 +60,22 @@ class SettingsWindow(settings_window.QtGui.QDialog, settings_window.Ui_Dialog):
 
         if self.TifExtensionCheckBox.isChecked():
             self.image_extensions.append('.tif')
+
+
+class IoThread(QThread):
+    """
+    Run the disk IO functions in a separate thread
+    """
+
+    def __init__(self, path):
+        QThread.__init__(self)
+        self.path = path
+
+    def __del__(self):
+        self.wait()
+
+    def run(self):
+        initialize_config(self.path)
 
 
 def get_application_path():
