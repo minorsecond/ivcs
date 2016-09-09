@@ -14,16 +14,6 @@
    <string>IVCS</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QTextEdit" name="RemoteFileList">
-    <property name="geometry">
-     <rect>
-      <x>14</x>
-      <y>38</y>
-      <width>427</width>
-      <height>229</height>
-     </rect>
-    </property>
-   </widget>
    <widget class="QLabel" name="label">
     <property name="geometry">
      <rect>
@@ -38,16 +28,6 @@
     </property>
     <property name="alignment">
      <set>Qt::AlignCenter</set>
-    </property>
-   </widget>
-   <widget class="QTextEdit" name="LocalFileList">
-    <property name="geometry">
-     <rect>
-      <x>584</x>
-      <y>38</y>
-      <width>427</width>
-      <height>229</height>
-     </rect>
     </property>
    </widget>
    <widget class="QLabel" name="label_2">
@@ -121,16 +101,6 @@
      <set>Qt::AlignCenter</set>
     </property>
    </widget>
-   <widget class="QTextEdit" name="LocalChangeList">
-    <property name="geometry">
-     <rect>
-      <x>584</x>
-      <y>352</y>
-      <width>427</width>
-      <height>229</height>
-     </rect>
-    </property>
-   </widget>
    <widget class="QLabel" name="LocalChanges_2">
     <property name="geometry">
      <rect>
@@ -145,16 +115,6 @@
     </property>
     <property name="alignment">
      <set>Qt::AlignCenter</set>
-    </property>
-   </widget>
-   <widget class="QTextEdit" name="RemoteChangeList">
-    <property name="geometry">
-     <rect>
-      <x>14</x>
-      <y>352</y>
-      <width>427</width>
-      <height>229</height>
-     </rect>
     </property>
    </widget>
    <widget class="QPushButton" name="PushButton">
@@ -194,6 +154,46 @@
     </property>
     <property name="text">
      <string>View Changes</string>
+    </property>
+   </widget>
+   <widget class="QListView" name="RemoteFileListView">
+    <property name="geometry">
+     <rect>
+      <x>14</x>
+      <y>38</y>
+      <width>427</width>
+      <height>229</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QListView" name="LocalFileListVIew">
+    <property name="geometry">
+     <rect>
+      <x>584</x>
+      <y>38</y>
+      <width>427</width>
+      <height>229</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QListView" name="RemoteChangesListView">
+    <property name="geometry">
+     <rect>
+      <x>14</x>
+      <y>352</y>
+      <width>427</width>
+      <height>229</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QListView" name="LocalChangesListView">
+    <property name="geometry">
+     <rect>
+      <x>584</x>
+      <y>352</y>
+      <width>427</width>
+      <height>229</height>
+     </rect>
     </property>
    </widget>
   </widget>
