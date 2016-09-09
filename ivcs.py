@@ -107,7 +107,8 @@ class SettingsWindow(settings_window.QtGui.QDialog, settings_window.Ui_Dialog):
         self.DataStoragePathEntry.setText(self.storage_path)
 
         # Buttonbox actions
-        self.buttonBox.button(settings_window.QtGui.QDialogButtonBox.Ok).clicked.connect(self.save_settings)
+        self.buttonBox.button(settings_window.QtGui.QDialogButtonBox.Ok).\
+            clicked.connect(self.save_settings)
 
     def save_settings(self):
         """
@@ -126,7 +127,7 @@ class SettingsWindow(settings_window.QtGui.QDialog, settings_window.Ui_Dialog):
         elif self.UseOSModifiedDate.isChecked():
             self.change_detection_method = "modification_time"
 
-        for checkbox in image_type_checkboxes:  # Todo: test this
+        for checkbox in image_type_checkboxes:
             if checkbox.isChecked():
                 text = checkbox.text()
                 if text not in self.image_extensions:
@@ -139,7 +140,7 @@ class SettingsWindow(settings_window.QtGui.QDialog, settings_window.Ui_Dialog):
         if self.UseChecksums or self.UseOSModifiedDate:
             if self.ImgExtensionCheckBox or self.TifExtensionCheckBox:
                 if len(self.UserNameEntry.text()) >= 2:
-                    if len(self.DataStoragePathEntry.text()) >= 2 :
+                    if len(self.DataStoragePathEntry.text()) >= 2:
                         try:
                             self.write_config()
                         except Exception as e:
@@ -207,8 +208,8 @@ def initialize_config(path):
 
     # Set default options
     config['settings'] = {"ImageExtensions": ['.img', '.tif'],
-                         "ChangeDetectMethod": "modification_time",
-                         "Username": "UNSET",
+                          "ChangeDetectMethod": "modification_time",
+                          "Username": "UNSET",
                           "datapath": "~"}
 
     with open(config_file_path, 'w') as configfile:
