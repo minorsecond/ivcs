@@ -15,6 +15,7 @@ from sqlalchemy.orm import relationship, backref, sessionmaker
 from database import ImageryDatabase
 from gui import commit_message_window, ivcs_mainwindow, settings_window, view_message_window
 import compressor
+import filesystem_utils
 
 
 class MainWindow(ivcs_mainwindow.QtGui.QMainWindow, ivcs_mainwindow.Ui_MainWindow):
@@ -58,68 +59,6 @@ class SettingsWindow(settings_window.QtGui.QDialog, settings_window.Ui_Dialog):
 
         if self.TifExtensionCheckBox.isChecked():
             self.image_extensions.append('.tif')
-
-
-class FileParser:
-    """
-    Contains the methods for hashing files and directories
-    """
-
-    def __init__(self, path, image_extensions):
-        self.path = path
-        self.image_extensions = image_extensions
-        self.hash_chunksize = 4096
-
-        self.files = []
-        self.subdirs = []
-        self.file_modified_time = None
-
-    def walker(self):
-        """
-        Walks paths and files, and returns sets of files and directories
-        :return: sets of files and directories
-        """
-
-        for root, dirs, filenames in os.walk(self.path):
-            for subdir in dirs:
-                self.subdirs.append(os.path.join(root, subdir))
-
-            for file in filenames:
-                if os.path.splitext(file)[1] in self.image_extensions:
-                    self.files.append(os.path.join(root, file))
-
-        return self.files, self.subdirs
-
-    def file_hasher(self, file):
-        """
-        Generates SHA256 for file.
-        :param file: file to check
-        :return: an sha256 hex
-        """
-
-        sha = hashlib.sha256()
-
-        with open(file, 'rb') as f:
-            while True:
-                data = f.read(self.hash_chunksize)
-                if data:
-                    sha.update(data)
-                else:
-                    break
-
-        return sha.hexdigest()
-
-    def last_modified_time(self, file):
-        """
-        Gets last modified time for file
-        :param file: file to check
-        :return: a datetime object
-        """
-
-        self.file_modified_time = os.path.getmtime(file)
-        self.file_modified_time = datetime.datetime.fromtimestamp(self.file_modified_time)
-
-        return self.file_modified_time
 
 
 def get_application_path():
