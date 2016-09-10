@@ -45,8 +45,6 @@ class DatabaseQueries:
         :return: List of projects
         """
 
-        result = None
-
         try:
             result = self.session.query(Users).filter_by(username=user).one()
 
@@ -88,3 +86,22 @@ class DatabaseQueries:
                                              "query_objects_for_user()")
 
         return set(project_ids)
+
+    def get_all_projects(self):
+        """
+        Returns a list of all project names and IDs
+        :return: list
+        """
+
+        projects_info = []
+
+        projects = self.session.query(Projects).all()
+
+        for project in projects:
+            project_id = project.id
+            project_name = project.name
+
+            project_info = (project_id, project_name)
+            projects_info.append(project_info)
+
+        return projects_info

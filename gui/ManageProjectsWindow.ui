@@ -29,7 +29,7 @@
     <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
    </property>
   </widget>
-  <widget class="QListView" name="Projects">
+  <widget class="QListView" name="ProjectsList">
    <property name="geometry">
     <rect>
      <x>12</x>
@@ -39,7 +39,7 @@
     </rect>
    </property>
   </widget>
-  <widget class="QListView" name="Users">
+  <widget class="QListView" name="UsersList">
    <property name="geometry">
     <rect>
      <x>352</x>

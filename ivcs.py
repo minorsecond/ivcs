@@ -21,7 +21,6 @@ from gui import commit_message_window, ivcs_mainwindow, settings_window, view_me
 import compressor
 import filesystem_utils
 
-
 class MainWindow(ivcs_mainwindow.QtGui.QMainWindow, ivcs_mainwindow.Ui_MainWindow):
     def __init__(self):
         ivcs_mainwindow.QtGui.QMainWindow.__init__(self)
@@ -222,6 +221,17 @@ class ProjectsWindow(ManageProjectsWindow.QtGui.QDialog,
 
     def __init__(self):
         super(ProjectsWindow, self).__init__()
+
+        # Set the global application path
+        general_functions = filesystem_utils.GeneralFunctions()
+        self.app_dir = general_functions.get_application_path()
+
+        # Get list of projects
+        queries = DatabaseQueries(self.app_dir)
+        projects = queries.get_all_projects()
+
+        print(projects)
+
         ManageProjectsWindow.QtGui.QDialog.__init__(self)
         ManageProjectsWindow.Ui_ManageProjectsWindow.__init__(self)
         self.setupUi(self)
