@@ -2,16 +2,18 @@
 Contains the SQL database definitions
 """
 
-from sqlalchemy import Column, Integer, String, Float, ForeignKey, Table
+from sqlalchemy import Column, Integer, String, Float, ForeignKey, Table, ForeignKeyConstraint
 from sqlalchemy.types import DateTime, Boolean
 from sqlalchemy.orm import relationship
 from database.base import Base
 
+__all__ = ['projects_associations', 'Users', 'Projects', 'Directories', 'Imagery', 'Changelist',
+           'Versions', 'Checkouts', 'Tasklists']
 
 # This stores associations between tasks and projects (many to many)
 projects_associations = Table("tasks-projects_associations", Base.metadata,
-                          Column("project_id", Integer, ForeignKey("projects.id")),
-                          Column("task_id", Integer, ForeignKey("tasklist.id"))
+                          Column("project_id", Integer, ForeignKey("Projects.id")),
+                          Column("task_id", Integer, ForeignKey("TaskLists.id"))
                               )
 
 
@@ -20,10 +22,10 @@ class Users(Base):
     Stores usernames
     """
 
-    __tablename__ = "users"
+    __tablename__ = "Users"
     id = Column(Integer, primary_key=True, index=True)
     username = Column(String)
-    checkouts = relationship("checkouts", back_populates="checkouts")
+    checkouts = relationship("Checkouts")
 
 
 class Projects(Base):
@@ -31,23 +33,23 @@ class Projects(Base):
     Table for storing all projects (will be stored on users local machine)
     """
 
-    __tablename__ = "projects"
+    __tablename__ = "Projects"
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String)
     working_directory = Column(String)
-    tasks = relationship("tasklist",
+    tasks = relationship("Tasklists",
                          secondary=projects_associations,
-                         backref="projects")
-
+                         back_populates="projects")
 
 class Directories(Base):
     """
-    Stores the directory structures associated with projects
+    Stores the directory structures associated with projects. Each will be linked to a project, and
+    will be scanned for file changes.
     """
 
-    __tablename__ = "directories"
+    __tablename__ = "Directories"
     id = Column(Integer, primary_key=True, index=True)
-    project_id = Column(Integer, ForeignKey("projects.id"))
+    project_id = Column(Integer, ForeignKey("Projects.id"))
     root = Column(String)
 
 
@@ -56,10 +58,10 @@ class Imagery(Base):
     Stores the image file data
     """
 
-    __tablename__ = "imagery"
+    __tablename__ = "Imagery"
     id = Column(Integer, primary_key=True, index=True)
-    project_id = Column(Integer, ForeignKey("projects.id"))
-    directory_id = Column(Integer, ForeignKey("directories.id"))
+    project_id = Column(Integer, ForeignKey("Projects.id"))
+    directory_id = Column(Integer, ForeignKey("Directories.id"))
     image_path = Column(String)
     image_extension = Column(String)
     image_size = Column(Float)
@@ -75,12 +77,12 @@ class Changelist(Base):
     Stores all changes made to file
     """
 
-    __tablename__ = "changelist"
-    id = Column(Integer)
+    __tablename__ = "Changelist"
+    id = Column(Integer, primary_key=True)
     uuid = Column(String, primary_key=True, index=True)
-    project_id = Column(Integer, ForeignKey("projects.id"))
-    directory_id = Column(Integer, ForeignKey("directories.id"))
-    image_id = Column(Integer, ForeignKey("imagery.id"))
+    project_id = Column(Integer, ForeignKey("Projects.id"))
+    directory_id = Column(Integer, ForeignKey("Directories.id"))
+    image_id = Column(Integer, ForeignKey("Imagery.id"))
     change_type = Column(Integer)  # 0->added 1-> modified 2-> deleted
     change_time = Column(DateTime)
 
@@ -90,14 +92,14 @@ class Versions(Base):
     Stores the image file version data
     """
 
-    __tablename__ = "versions"
-    id = Column(Integer)
+    __tablename__ = "Versions"
+    id = Column(Integer, primary_key=True)
     uuid = Column(String, primary_key=True, index=True)
-    project_id = Column(Integer, ForeignKey("projects.id"))
-    directory_id = Column(Integer, ForeignKey("directories.id"))
-    image_id = Column(Integer, ForeignKey("imagery.id"))
-    change_id = Column(String, ForeignKey("changelist.id"))
-    checkout_id = Column(Integer, ForeignKey("checkouts.id"))
+    project_id = Column(Integer, ForeignKey("Projects.id"))
+    directory_id = Column(Integer, ForeignKey("Directories.id"))
+    image_id = Column(Integer, ForeignKey("Imagery.id"))
+    change_id = Column(String, ForeignKey("Changelist.id"))
+    checkout_id = Column(Integer, ForeignKey("Checkouts.id"))
     path_to_version = Column(String)
     commit_message = Column(String)
 
@@ -107,12 +109,12 @@ class Checkouts(Base):
     Stores checkout status
     """
 
-    __tablename__ = "checkouts"
-    id = Column(Integer)
+    __tablename__ = "Checkouts"
+    id = Column(Integer, primary_key=True)
     uuid = Column(String, primary_key=True, index=True)
-    project_id = Column(Integer, ForeignKey("projects.id"))
-    image_id = Column(Integer, ForeignKey("imagery.id"))
-    checked_out_by = relationship("users", back_populates="checkouts")
+    project_id = Column(Integer, ForeignKey("Projects.id"))
+    image_id = Column(Integer, ForeignKey("Imagery.id"))
+    checked_out_by = Column(String, ForeignKey("Users.id"))
     checked_out_date = Column(DateTime)
     checked_in_date = Column(DateTime)
 
@@ -122,8 +124,11 @@ class Tasklists(Base):
     Stores tasks that are repeated (for drop-down menu)
     """
 
-    __tablename__ = "tasklist"
+    __tablename__ = "TaskLists"
     id = Column(Integer, primary_key=True)
     taskname = Column(String)
     task_description = Column(String)
     task_output_directory = Column(String)
+    projects = relationship("Projects",
+                            secondary=projects_associations,
+                            back_populates="tasks")

@@ -3,6 +3,7 @@ Utilities for parsing files, creating hashes, etc.
 """
 
 import os
+import sys
 import datetime
 import hashlib
 from PyQt4.QtCore import QThread, SIGNAL, QUrl, pyqtSignal, QObject
@@ -143,14 +144,30 @@ class GeneralFunctions:
     Functions that don't need to be threaded
     """
 
-    def __init__(self, file):
-        self.file = file
+    def __init__(self):
+        self.file = None
 
-    def hide_file(self):
+    def hide_file(self, file):
         """
         Hides files in windows
         :return:
         """
-
+        self.file = file
         if platform.system == "Windows":
             win32api.SetFileAttributes(self.file, win32con.FILE_ATTRIBUTE_HIDDEN)
+
+    def get_application_path(self):
+        """
+        Gets the location of the executable file for storing data
+        :return: None
+        """
+
+        application_path = None
+
+        if getattr(sys, 'frozen', False):
+            application_path = os.path.dirname(sys.executable)
+
+        elif __file__:
+            application_path = os.path.join(os.path.dirname(__file__), '..')
+
+        return application_path

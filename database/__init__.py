@@ -26,3 +26,23 @@ class ImageryDatabase:
         """
 
         return self.session
+
+
+class DatabaseQueries:
+    """
+    Methods for querying the database
+    """
+
+    def __init__(self, path):
+        self.db_filter = None
+        db_init = ImageryDatabase(path)
+
+        self.session = db_init.load_session()
+
+    def query_projects(self):
+        """
+        Queries the projects table
+        :return: List of projects
+        """
+        print(self.session.query(Projects).order_by(Projects.name).all())
+        return self.session.query(Projects)

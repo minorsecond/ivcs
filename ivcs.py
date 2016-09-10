@@ -14,7 +14,7 @@ from PyQt4.QtCore import QThread
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, backref, sessionmaker
-from database import ImageryDatabase
+from database import ImageryDatabase, DatabaseQueries
 from gui import commit_message_window, ivcs_mainwindow, settings_window, view_message_window, CheckoutStatus
 import compressor
 import filesystem_utils
@@ -25,12 +25,11 @@ class MainWindow(ivcs_mainwindow.QtGui.QMainWindow, ivcs_mainwindow.Ui_MainWindo
         ivcs_mainwindow.QtGui.QMainWindow.__init__(self)
         ivcs_mainwindow.Ui_MainWindow.__init__(self)
         self.setupUi(self)
-
         self.image_extensions = []
+        self.general_functions = filesystem_utils.GeneralFunctions()
+        self.app_dir = self.general_functions.get_application_path()
 
-        # Create config file
-        app_dir = get_application_path()
-        if not os.path.exists(os.path.join(app_dir, 'ivcs.ini')):
+        if not os.path.exists(os.path.join(self.app_dir, 'ivcs.ini')):
 
             # Disable all GUI elements until a branch is set and scanned
             self.RemoteChangesListView.setEnabled(False)
@@ -43,9 +42,22 @@ class MainWindow(ivcs_mainwindow.QtGui.QMainWindow, ivcs_mainwindow.Ui_MainWindo
             self.CommitButton.setEnabled(False)
             self.PushButton.setEnabled(False)
 
+        else:
+            # Load current settings
+            self.config_file_path = os.path.join(self.app_dir, 'ivcs.ini')
+            self.config = configparser.ConfigParser()
+            self.config.read(self.config_file_path)
+
+            self.change_detection_method = self.config.get("settings", "changedetectmethod")
+            self.username = self.config.get("settings", "username")
+            self.image_extensions = ast.literal_eval(self.config.get("settings", "imageextensions"))
+            self.storage_path = self.config.get("settings", "datapath")
+
         # Menu Bar Actions
         self.actionSettings.triggered.connect(self.handle_settings_click)
         self.menuBranch.triggered.connect(self.handle_new_branch_click)
+
+        self.open_database()
 
     def handle_settings_click(self):
         """
@@ -64,6 +76,20 @@ class MainWindow(ivcs_mainwindow.QtGui.QMainWindow, ivcs_mainwindow.Ui_MainWindo
         """
 
         pass
+
+    def open_database(self):
+        """
+        Opens up the DB
+        :return: None
+        """
+        queries = DatabaseQueries(self.app_dir)
+        projects = queries.query_projects()
+
+        for project in projects:
+            print(project.name)
+
+        #self.fs_walker = filesystem_utils.FileSystemWalker(self.storage_path, self.image_extensions)
+        #self.files = self.fs_walker
 
 
 class SettingsWindow(settings_window.QtGui.QDialog, settings_window.Ui_Dialog):
@@ -201,23 +227,6 @@ class IoThread(QThread):
         initialize_config(self.path)
 
 
-def get_application_path():
-    """
-    Gets the location of the executable file for storing data
-    :return: None
-    """
-
-    application_path = None
-
-    if getattr(sys, 'frozen', False):
-        application_path = os.path.dirname(sys.executable)
-
-    elif __file__:
-        application_path = os.path.dirname(__file__)
-
-    return application_path
-
-
 def initialize_config(path):
     """
     Sets up a new config file, or loads one if it already exists at the exe directory
@@ -261,11 +270,10 @@ def main():
     io = filesystem_utils.FileCopier("/Users/rwardrup/Downloads/pycharm-professional-2016.2.3.dmg")
     io.run()
 
-    # Create config file
-    app_dir = get_application_path()
+    general_functions = filesystem_utils.GeneralFunctions()
 
-    # Set up DB
-    db_init(app_dir)
+    # Create config file
+    app_dir = general_functions.get_application_path()
 
     if not os.path.exists(os.path.join(app_dir, 'ivcs.ini')):
         initialize_config(app_dir)
