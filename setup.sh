@@ -13,3 +13,5 @@ pyuic4 gui/CheckoutStatus.ui -o gui/CheckoutStatus.py
 pyuic4 gui/ManageProjectsWindow.ui -o gui/ManageProjectsWindow.py
 pyuic4 gui/AddProject.ui -o gui/AddProject.py
 pyuic4 gui/ErrorMessage.ui -o gui/ErrorMessage.py
+pyuic4 gui/NewUserRegistrationWindow.ui -o gui/NewUserRegistrationWindow.py
+pyuic4 gui/LoginWindow.ui -o gui/LoginWindow.py
