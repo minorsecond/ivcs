@@ -222,6 +222,10 @@ class ProjectsWindow(ManageProjectsWindow.QtGui.QDialog,
     def __init__(self):
         super(ProjectsWindow, self).__init__()
 
+        ManageProjectsWindow.QtGui.QDialog.__init__(self)
+        ManageProjectsWindow.Ui_ManageProjectsWindow.__init__(self)
+        self.setupUi(self)
+
         # Set the global application path
         general_functions = filesystem_utils.GeneralFunctions()
         self.app_dir = general_functions.get_application_path()
@@ -230,11 +234,10 @@ class ProjectsWindow(ManageProjectsWindow.QtGui.QDialog,
         queries = DatabaseQueries(self.app_dir)
         projects = queries.get_all_projects()
 
-        print(projects)
-
-        ManageProjectsWindow.QtGui.QDialog.__init__(self)
-        ManageProjectsWindow.Ui_ManageProjectsWindow.__init__(self)
-        self.setupUi(self)
+        for project in projects:
+            project_id = project[0]
+            project_name = project[1]
+            self.ProjectsList.addItem(project_name)
 
 
 class CheckoutStatusWindow(CheckoutStatus.QtGui.QDialog, CheckoutStatus.Ui_Dialog):
