@@ -152,3 +152,24 @@ class DatabaseQueries:
         :param project: project id
         :return: List of directories associated with project
         """
+
+        directories_in_project = []
+        directories = None
+
+        project = self.session.query(Projects).filter_by(name=project).first()
+
+        try:
+            directories = self.session.query(Directories).filter_by(project_id=project.id).all()
+        except Exception as e:  # TODO: Make this specific to sqlalchemy error
+            logging.warning("Error querying the project_users table in get_users_for_project. "
+                            "Perhaps there are no users assigned to project.")
+            print(e)
+
+        for entry in directories:
+            directory = entry.root
+            project_id = entry.project_id
+            result = (project_id, directory)
+
+            directories_in_project.append(result)
+
+        return directories_in_project
