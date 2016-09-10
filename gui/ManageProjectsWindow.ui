@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>621</width>
-    <height>443</height>
+    <width>952</width>
+    <height>442</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,7 +16,7 @@
   <widget class="QDialogButtonBox" name="buttonBox">
    <property name="geometry">
     <rect>
-     <x>268</x>
+     <x>598</x>
      <y>398</y>
      <width>341</width>
      <height>32</height>
@@ -48,7 +48,7 @@
   <widget class="QLabel" name="label_2">
    <property name="geometry">
     <rect>
-     <x>350</x>
+     <x>594</x>
      <y>14</y>
      <width>259</width>
      <height>16</height>
@@ -74,7 +74,7 @@
   <widget class="QListWidget" name="UsersList">
    <property name="geometry">
     <rect>
-     <x>352</x>
+     <x>596</x>
      <y>32</y>
      <width>256</width>
      <height>129</height>
@@ -84,7 +84,7 @@
   <widget class="QListWidget" name="ProjectDirectoriesList">
    <property name="geometry">
     <rect>
-     <x>352</x>
+     <x>596</x>
      <y>222</y>
      <width>256</width>
      <height>129</height>
@@ -94,7 +94,7 @@
   <widget class="QLabel" name="label_3">
    <property name="geometry">
     <rect>
-     <x>350</x>
+     <x>594</x>
      <y>204</y>
      <width>259</width>
      <height>16</height>
@@ -110,7 +110,7 @@
   <widget class="QPushButton" name="AddProjectDirectoryButton">
    <property name="geometry">
     <rect>
-     <x>350</x>
+     <x>594</x>
      <y>354</y>
      <width>75</width>
      <height>32</height>
@@ -123,7 +123,7 @@
   <widget class="QPushButton" name="AddUserToProjectButton">
    <property name="geometry">
     <rect>
-     <x>350</x>
+     <x>594</x>
      <y>164</y>
      <width>75</width>
      <height>32</height>
@@ -162,7 +162,7 @@
   <widget class="QPushButton" name="RemoveDirectoryFromProjectButton">
    <property name="geometry">
     <rect>
-     <x>536</x>
+     <x>780</x>
      <y>354</y>
      <width>75</width>
      <height>32</height>
@@ -175,7 +175,7 @@
   <widget class="QPushButton" name="RemoveUserFromProjectButton">
    <property name="geometry">
     <rect>
-     <x>536</x>
+     <x>780</x>
      <y>164</y>
      <width>75</width>
      <height>32</height>
@@ -183,6 +183,58 @@
    </property>
    <property name="text">
     <string>Remove</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="AddTaskButton">
+   <property name="geometry">
+    <rect>
+     <x>302</x>
+     <y>356</y>
+     <width>75</width>
+     <height>32</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Add</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="RemoveTaskButton">
+   <property name="geometry">
+    <rect>
+     <x>488</x>
+     <y>356</y>
+     <width>75</width>
+     <height>32</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Remove</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_4">
+   <property name="geometry">
+    <rect>
+     <x>304</x>
+     <y>14</y>
+     <width>259</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Tasks</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+  </widget>
+  <widget class="QListWidget" name="TasksList">
+   <property name="geometry">
+    <rect>
+     <x>304</x>
+     <y>32</y>
+     <width>256</width>
+     <height>321</height>
+    </rect>
    </property>
   </widget>
  </widget>
