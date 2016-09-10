@@ -181,10 +181,14 @@ class DatabaseQueries:
         :return: None
         """
 
-        new_project = Projects(
-            name=project_name
-        )
+        current_projects = self.get_all_projects()
+        if project_name not in current_projects:
+            new_project = Projects(
+                name=project_name
+            )
 
-        print(new_project.name)
-        self.session.add(new_project)
-        self.session.flush()
+            self.session.add(new_project)
+            self.session.commit()
+            return 0
+        else:
+            return 1
