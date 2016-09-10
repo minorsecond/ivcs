@@ -180,9 +180,13 @@ class DatabaseQueries:
         :param name: Name of new project
         :return: None
         """
-
+        current_project_names = []
         current_projects = self.get_all_projects()
-        if project_name not in current_projects:
+
+        for project in current_projects:
+            current_project_names.append(project[1])
+
+        if project_name not in current_project_names:
             new_project = Projects(
                 name=project_name
             )

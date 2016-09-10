@@ -12,3 +12,4 @@ pyuic4 gui/CreateBranchWindow.ui -o gui/CreateBranchWindow.py
 pyuic4 gui/CheckoutStatus.ui -o gui/CheckoutStatus.py
 pyuic4 gui/ManageProjectsWindow.ui -o gui/ManageProjectsWindow.py
 pyuic4 gui/AddProject.ui -o gui/AddProject.py
+pyuic4 gui/ErrorMessage.ui -o gui/ErrorMessage.py
