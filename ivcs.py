@@ -17,7 +17,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, backref, sessionmaker
 from database import ImageryDatabase, DatabaseQueries
 from gui import commit_message_window, ivcs_mainwindow, settings_window, view_message_window, \
-    CheckoutStatus, ManageProjectsWindow, AddProject
+    CheckoutStatus, ManageProjectsWindow, AddProject, ErrorMessage
 import compressor
 import filesystem_utils
 
@@ -331,6 +331,23 @@ class AddProjectWindow(AddProject.QtGui.QDialog, AddProject.Ui_Dialog):
         result = self.db.add_new_project(project_name)
 
         if result == 1:  # User tried to enter a project that already exists
+            # Bring up error message
+            text = "Error: Project already exists in database."
+            error_window = ErrorMessagePopup(text)
+            error_window.show()
+            error_window.exec_()
+
+class ErrorMessagePopup(ErrorMessage.QtGui.QDialog, ErrorMessage.Ui_ErrorWindow):
+    """
+    Brings up window containing error message
+    """
+
+    def __init__(self, text):
+        super(ErrorMessagePopup, self).__init__()
+        ErrorMessage.QtGui.QDialog.__init__(self)
+        ErrorMessage.Ui_ErrorWindow.__init__(self)
+        self.setupUi(self)
+        self.ErrorMessage.setText(text)
 
 
 class CheckoutStatusWindow(CheckoutStatus.QtGui.QDialog, CheckoutStatus.Ui_Dialog):
