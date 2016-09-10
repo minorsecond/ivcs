@@ -229,14 +229,9 @@
     <property name="title">
      <string>VCS</string>
     </property>
-    <widget class="QMenu" name="menuBranch">
-     <property name="title">
-      <string>Manage Projects</string>
-     </property>
-    </widget>
     <addaction name="actionAdd_New_Directory"/>
     <addaction name="actionAdd_New_File"/>
-    <addaction name="menuBranch"/>
+    <addaction name="actionManage_Projects"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuVCS"/>
@@ -264,6 +259,11 @@
   <action name="actionDelete">
    <property name="text">
     <string>Delete</string>
+   </property>
+  </action>
+  <action name="actionManage_Projects">
+   <property name="text">
+    <string>Manage Projects</string>
    </property>
   </action>
  </widget>

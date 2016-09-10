@@ -16,7 +16,8 @@ from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, backref, sessionmaker
 from database import ImageryDatabase, DatabaseQueries
-from gui import commit_message_window, ivcs_mainwindow, settings_window, view_message_window, CheckoutStatus
+from gui import commit_message_window, ivcs_mainwindow, settings_window, view_message_window, \
+    CheckoutStatus, ManageProjectsWindow
 import compressor
 import filesystem_utils
 
@@ -58,7 +59,7 @@ class MainWindow(ivcs_mainwindow.QtGui.QMainWindow, ivcs_mainwindow.Ui_MainWindo
 
         # Menu Bar Actions
         self.actionSettings.triggered.connect(self.handle_settings_click)
-        self.menuBranch.triggered.connect(self.handle_new_branch_click)
+        self.actionManage_Projects.triggered.connect(self.handle_manage_projects_click)
 
         self.open_database(self.username)
 
@@ -99,6 +100,16 @@ class MainWindow(ivcs_mainwindow.QtGui.QMainWindow, ivcs_mainwindow.Ui_MainWindo
 
         #self.fs_walker = filesystem_utils.FileSystemWalker(self.storage_path, self.image_extensions)
         #self.files = self.fs_walker
+
+    def handle_manage_projects_click(self):
+        """
+        Handle user clicking manage projects
+        :return: None
+        """
+
+        proj_window = ProjectsWindow()
+        proj_window.show()
+        proj_window.exec_()
 
 
 class SettingsWindow(settings_window.QtGui.QDialog, settings_window.Ui_Dialog):
@@ -206,6 +217,16 @@ class SettingsWindow(settings_window.QtGui.QDialog, settings_window.Ui_Dialog):
         logging.info("Updated configuration file at {}".format(self.config_file_path))
 
 
+class ProjectsWindow(ManageProjectsWindow.QtGui.QDialog,
+                     ManageProjectsWindow.Ui_ManageProjectsWindow):
+
+    def __init__(self):
+        super(ProjectsWindow, self).__init__()
+        ManageProjectsWindow.QtGui.QDialog.__init__(self)
+        ManageProjectsWindow.Ui_ManageProjectsWindow.__init__(self)
+        self.setupUi(self)
+
+
 class CheckoutStatusWindow(CheckoutStatus.QtGui.QDialog, CheckoutStatus.Ui_Dialog):
     """
     Status window for checking out files
@@ -289,11 +310,11 @@ def logger():
     fs_utils = filesystem_utils.GeneralFunctions()
     path = fs_utils.get_application_path()
     logfile = os.path.join(path, 'IVCS.log')
-    fmt = "%(asctime) %(message)s"
     log = logging.basicConfig(filename=logfile, format='%(asctime)s %(levelname)s -> %(message)s',
                               level=logging.DEBUG, datefmt='%Y-%m-%d %H:%M:%S')
 
     return log
+
 
 def main():
     """
@@ -302,7 +323,6 @@ def main():
     """
 
     logger()
-
     logging.info("IVCS started.")
 
     # TESTING
