@@ -243,10 +243,7 @@ class ProjectsWindow(ManageProjectsWindow.QtGui.QDialog,
         # Handle the various add/remove buttons
         self.AddProjectButton.clicked.connect(self.handle_add_project_clicked)
 
-        for project in self.projects:
-            project_id = project[0]
-            project_name = project[1]
-            self.ProjectsList.addItem(project_name)
+        self.update_projects_list()
 
     def update_projects_list(self):
         """
@@ -301,7 +298,7 @@ class ProjectsWindow(ManageProjectsWindow.QtGui.QDialog,
         add_project_window.show()
         add_project_window.exec_()
 
-
+        self.update_projects_list()
 
 
 class AddProjectWindow(AddProject.QtGui.QDialog, AddProject.Ui_Dialog):
@@ -331,7 +328,9 @@ class AddProjectWindow(AddProject.QtGui.QDialog, AddProject.Ui_Dialog):
         """
 
         project_name = self.ProjectNameEntryEdit.text()
-        self.db.add_new_project(project_name)
+        result = self.db.add_new_project(project_name)
+
+        if result == 1:  # User tried to enter a project that already exists
 
 
 class CheckoutStatusWindow(CheckoutStatus.QtGui.QDialog, CheckoutStatus.Ui_Dialog):
