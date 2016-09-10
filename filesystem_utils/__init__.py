@@ -3,6 +3,7 @@ Utilities for parsing files, creating hashes, etc.
 """
 
 import os
+import logging
 import sys
 import datetime
 import hashlib

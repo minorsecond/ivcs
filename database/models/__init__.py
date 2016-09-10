@@ -11,10 +11,13 @@ __all__ = ['projects_associations', 'Users', 'Projects', 'Directories', 'Imagery
            'Versions', 'Checkouts', 'Tasklists']
 
 # This stores associations between tasks and projects (many to many)
-projects_associations = Table("tasks-projects_associations", Base.metadata,
-                          Column("project_id", Integer, ForeignKey("Projects.id")),
-                          Column("task_id", Integer, ForeignKey("TaskLists.id"))
-                              )
+project_tasks = Table("tasks-projects_associations", Base.metadata,
+                      Column("project_id", Integer, ForeignKey("Projects.id")),
+                      Column("task_id", Integer, ForeignKey("TaskLists.id")))
+
+user_projects = Table("user-projects_associations", Base.metadata,
+                      Column("user_id", Integer, ForeignKey("Users.id")),
+                      Column("project_id", Integer, ForeignKey("Projects.id")))
 
 
 class Users(Base):
@@ -26,6 +29,7 @@ class Users(Base):
     id = Column(Integer, primary_key=True, index=True)
     username = Column(String)
     checkouts = relationship("Checkouts")
+    projects = relationship("Projects", secondary=user_projects)
 
 
 class Projects(Base):
@@ -37,9 +41,8 @@ class Projects(Base):
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String)
     working_directory = Column(String)
-    tasks = relationship("Tasklists",
-                         secondary=projects_associations,
-                         back_populates="projects")
+    tasks = relationship("Tasklists", secondary=project_tasks)
+
 
 class Directories(Base):
     """
@@ -114,7 +117,7 @@ class Checkouts(Base):
     uuid = Column(String, primary_key=True, index=True)
     project_id = Column(Integer, ForeignKey("Projects.id"))
     image_id = Column(Integer, ForeignKey("Imagery.id"))
-    checked_out_by = Column(String, ForeignKey("Users.id"))
+    user_id = Column(Integer, ForeignKey("Users.id"))
     checked_out_date = Column(DateTime)
     checked_in_date = Column(DateTime)
 
@@ -129,6 +132,4 @@ class Tasklists(Base):
     taskname = Column(String)
     task_description = Column(String)
     task_output_directory = Column(String)
-    projects = relationship("Projects",
-                            secondary=projects_associations,
-                            back_populates="tasks")
+    projects = relationship("Projects", secondary=project_tasks)

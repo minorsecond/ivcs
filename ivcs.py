@@ -10,6 +10,7 @@ import ast
 import shutil
 import hashlib
 import datetime
+import logging
 from PyQt4.QtCore import QThread
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
@@ -30,6 +31,8 @@ class MainWindow(ivcs_mainwindow.QtGui.QMainWindow, ivcs_mainwindow.Ui_MainWindo
         self.app_dir = self.general_functions.get_application_path()
 
         if not os.path.exists(os.path.join(self.app_dir, 'ivcs.ini')):
+            logging.warning("Couldn't find configuration file at {}, after it should have been "
+                            "automatically created.".format(self.app_dir))
 
             # Disable all GUI elements until a branch is set and scanned
             self.RemoteChangesListView.setEnabled(False)
@@ -82,11 +85,17 @@ class MainWindow(ivcs_mainwindow.QtGui.QMainWindow, ivcs_mainwindow.Ui_MainWindo
         Opens up the DB
         :return: None
         """
-        queries = DatabaseQueries(self.app_dir)
-        projects = queries.query_projects()
 
-        for project in projects:
-            print(project.name)
+        logging.info("Querying the database for user projects.")
+
+        queries = DatabaseQueries(self.app_dir)
+        projects = queries.query_projects_for_user("bill")
+
+        if projects is ValueError:  # Could not find any users matching the name
+            logging.error("Could not find any rows in Users DB for current username.")
+        else:
+            for project in projects:
+                print(project)
 
         #self.fs_walker = filesystem_utils.FileSystemWalker(self.storage_path, self.image_extensions)
         #self.files = self.fs_walker
@@ -106,8 +115,10 @@ class SettingsWindow(settings_window.QtGui.QDialog, settings_window.Ui_Dialog):
         self.storage_path = None
         self.change_detection_method = None
 
+        fs_utils = filesystem_utils.GeneralFunctions()
+
         # Load current settings
-        self.app_dir = get_application_path()
+        self.app_dir = fs_utils.get_application_path()
         self.config_file_path = os.path.join(self.app_dir, 'ivcs.ini')
         self.config = configparser.ConfigParser()
         self.config.read(self.config_file_path)
@@ -122,6 +133,7 @@ class SettingsWindow(settings_window.QtGui.QDialog, settings_window.Ui_Dialog):
         elif self.change_detection_method == "modification_time":
             self.UseOSModifiedDate.setChecked(True)
         else:
+            logging.error("Invalid value in change_detection_method.")
             raise ValueError
 
         if ".img" in self.image_extensions:
@@ -170,6 +182,8 @@ class SettingsWindow(settings_window.QtGui.QDialog, settings_window.Ui_Dialog):
                         try:
                             self.write_config()
                         except Exception as e:
+                            logging.error("Could not write to configuration file. The write_config "
+                                          "function returned: {}".format(e))
                             print(e)
 
     def write_config(self):
@@ -186,6 +200,8 @@ class SettingsWindow(settings_window.QtGui.QDialog, settings_window.Ui_Dialog):
 
         with open(self.config_file_path, 'w') as configfile:
             self.config.write(configfile)
+
+        logging.info("Updated configuration file at {}".format(self.config_file_path))
 
 
 class CheckoutStatusWindow(CheckoutStatus.QtGui.QDialog, CheckoutStatus.Ui_Dialog):
@@ -257,14 +273,35 @@ def db_init(path):
     imagery_database = ImageryDatabase(path)
     db_session = imagery_database.load_session()  # Get the session object
 
+    logging.info("Initialized database at {}".format(path))
+
     return db_session
 
+
+def logger():
+    """
+    Sets up the logfile
+    :return: None
+    """
+
+    fs_utils = filesystem_utils.GeneralFunctions()
+    path = fs_utils.get_application_path()
+    logfile = os.path.join(path, 'IVCS.log')
+    fmt = "%(asctime) %(message)s"
+    log = logging.basicConfig(filename=logfile, format='%(asctime)s %(levelname)s -> %(message)s',
+                              level=logging.DEBUG, datefmt='%Y-%m-%d %H:%M:%S')
+
+    return log
 
 def main():
     """
     Starts the program
     :return: None
     """
+
+    logger()
+
+    logging.info("IVCS started.")
 
     # TESTING
     io = filesystem_utils.FileCopier("/Users/rwardrup/Downloads/pycharm-professional-2016.2.3.dmg")
@@ -277,6 +314,7 @@ def main():
 
     if not os.path.exists(os.path.join(app_dir, 'ivcs.ini')):
         initialize_config(app_dir)
+        logging.info("Created configuration file at {}".format(app_dir))
 
     app = ivcs_mainwindow.QtGui.QApplication(sys.argv)
     window = MainWindow()
