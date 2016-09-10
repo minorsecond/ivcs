@@ -165,12 +165,13 @@ class DatabaseQueries:
                             "Perhaps there are no users assigned to project.")
             print(e)
 
-        for entry in directories:
-            directory = entry.root
-            project_id = entry.project_id
-            result = (project_id, directory)
+        if directories:
+            for entry in directories:
+                directory = entry.root
+                project_id = entry.project_id
+                result = (project_id, directory)
 
-            directories_in_project.append(result)
+                directories_in_project.append(result)
 
         return directories_in_project
 
