@@ -146,3 +146,15 @@ class Tasklists(Base):
     task_description = Column(String)
     task_output_directory = Column(String)
     projects = relationship("Projects", secondary=project_tasks)
+    task_complete = Column(Boolean)
+
+
+class TaskDependencies(Base):
+    """
+    Relationships between tasks that denote dependencies
+    """
+
+    __tablename__ = "TaskDependencies"
+    id = Column(Integer, primary_key=True)
+    task = Column(Integer, ForeignKey("TaskLists.id"))
+    dependency = Column(Integer, ForeignKey("TaskLists.id"))
