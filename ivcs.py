@@ -17,7 +17,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, backref, sessionmaker
 from database import ImageryDatabase, DatabaseQueries
 from gui import commit_message_window, ivcs_mainwindow, settings_window, view_message_window, \
-    CheckoutStatus, ManageProjectsWindow
+    CheckoutStatus, ManageProjectsWindow, AddProject
 import compressor
 import filesystem_utils
 
@@ -235,7 +235,7 @@ class ProjectsWindow(ManageProjectsWindow.QtGui.QDialog,
         db = ImageryDatabase(self.app_dir)
         db_session = db.load_session()
 
-        projects = self.queries.get_all_projects()
+        self.projects = self.queries.get_all_projects()
 
         # Do something when an item in the projects list is clicked
         self.ProjectsList.itemClicked.connect(self.handle_project_clicked)
@@ -243,7 +243,21 @@ class ProjectsWindow(ManageProjectsWindow.QtGui.QDialog,
         # Handle the various add/remove buttons
         self.AddProjectButton.clicked.connect(self.handle_add_project_clicked)
 
-        for project in projects:
+        for project in self.projects:
+            project_id = project[0]
+            project_name = project[1]
+            self.ProjectsList.addItem(project_name)
+
+    def update_projects_list(self):
+        """
+        Update the list of projects
+        :return: None
+        """
+
+        self.ProjectsList.clear()
+        self.projects = self.queries.get_all_projects()
+
+        for project in self.projects:
             project_id = project[0]
             project_name = project[1]
             self.ProjectsList.addItem(project_name)
@@ -283,7 +297,42 @@ class ProjectsWindow(ManageProjectsWindow.QtGui.QDialog,
         :return: None
         """
 
-        pass
+        add_project_window = AddProjectWindow()
+        add_project_window.show()
+        add_project_window.exec_()
+
+
+
+
+class AddProjectWindow(AddProject.QtGui.QDialog, AddProject.Ui_Dialog):
+    """
+    New Project Name Entry
+    """
+
+    def __init__(self):
+        super(AddProjectWindow, self).__init__()
+        AddProject.QtGui.QDialog.__init__(self)
+        AddProject.Ui_Dialog.__init__(self)
+        self.setupUi(self)
+        general_functions = filesystem_utils.GeneralFunctions()
+        self.app_dir = general_functions.get_application_path()
+
+        # Create DB session
+        self.db = DatabaseQueries(self.app_dir)
+
+        # handle "OK" clicked in buttonbox
+        self.buttonBox.button(AddProject.QtGui.QDialogButtonBox.Ok).clicked.\
+            connect(self.create_new_project)
+
+    def create_new_project(self):
+        """
+        Adds the project name from the Add Project window to the db
+        :return: None
+        """
+
+        project_name = self.ProjectNameEntryEdit.text()
+        self.db.add_new_project(project_name)
+
 
 class CheckoutStatusWindow(CheckoutStatus.QtGui.QDialog, CheckoutStatus.Ui_Dialog):
     """

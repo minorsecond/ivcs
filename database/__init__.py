@@ -173,3 +173,18 @@ class DatabaseQueries:
             directories_in_project.append(result)
 
         return directories_in_project
+
+    def add_new_project(self, project_name):
+        """
+        Add a new project to database
+        :param name: Name of new project
+        :return: None
+        """
+
+        new_project = Projects(
+            name=project_name
+        )
+
+        print(new_project.name)
+        self.session.add(new_project)
+        self.session.flush()
