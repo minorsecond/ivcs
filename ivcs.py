@@ -95,7 +95,7 @@ class MainWindow(ivcs_mainwindow.QtGui.QMainWindow, ivcs_mainwindow.Ui_MainWindo
             logging.error("Could not find any rows in Users DB for current username.")
         else:
             for project in projects:
-                print(project)
+                print("Projects associated with user: {}".format(project))  # TODO: Remove this after testing
 
         #self.fs_walker = filesystem_utils.FileSystemWalker(self.storage_path, self.image_extensions)
         #self.files = self.fs_walker
@@ -231,13 +231,37 @@ class ProjectsWindow(ManageProjectsWindow.QtGui.QDialog,
         self.app_dir = general_functions.get_application_path()
 
         # Get list of projects
-        queries = DatabaseQueries(self.app_dir)
-        projects = queries.get_all_projects()
+        self.queries = DatabaseQueries(self.app_dir)
+        db = ImageryDatabase(self.app_dir)
+        db_session = db.load_session()
+
+        projects = self.queries.get_all_projects()
+
+        # Do something when an item in the projects list is clicked
+        self.ProjectsList.itemClicked.connect(self.handle_project_clicked)
 
         for project in projects:
             project_id = project[0]
             project_name = project[1]
             self.ProjectsList.addItem(project_name)
+
+    def handle_project_clicked(self):
+        """
+        Updates the users and directories lists when a project is clicked
+        :return: None
+        """
+
+        # First, clear the user list so that they don't stack up
+        self.UsersList.clear()
+        project_name = self.ProjectsList.currentItem().text()
+        project_users = self.queries.get_users_for_project(project_name)
+
+        for item in project_users:
+            project_id = item[0]
+            project_name = item[1]
+            username = item[2]
+
+            self.UsersList.addItem(username)
 
 
 class CheckoutStatusWindow(CheckoutStatus.QtGui.QDialog, CheckoutStatus.Ui_Dialog):

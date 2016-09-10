@@ -105,3 +105,50 @@ class DatabaseQueries:
             projects_info.append(project_info)
 
         return projects_info
+
+    def get_users_for_project(self, project):
+        """
+        Gets the users associated with a specific project
+        :return: List of usernames associated with a project ID (project.id, project.name, username)
+        """
+
+        users_per_project = []
+        associations = None
+
+        project = self.session.query(Projects).filter_by(name=project).first()
+
+        try:
+            associations = self.session.query(user_projects).filter_by(project_id=project.id)
+
+        except Exception as e:  # TODO: Make this specific to sqlalchemy.exc.InvalidRequestError
+            logging.warning("Error querying the project_users table in get_users_for_project. "
+                            "Perhaps there are no users assigned to project.")
+            print(e)
+
+        for association in associations:
+            project_id = association.project_id
+            project_name = project.name
+            user_id = association.user_id
+            user = self.session.query(Users).filter_by(id=user_id).one()
+
+            try:
+                user_name = user.username
+                result = (project_id, project_name, user_name)
+                users_per_project.append(result)
+
+            except AttributeError as e:
+                text = "Could not find row in Users db for user {0} when trying to get users " \
+                       "for project {1}. Perhaps the project is not associated with any users. " \
+                       "The function returned: {2}".format(user_id, project_name, e)
+
+                logging.info(text)
+                print(text)
+
+        return users_per_project
+
+    def get_directories_for_project(self, project):
+        """
+        Gets the directories associated with a project
+        :param project: project id
+        :return: List of directories associated with project
+        """
