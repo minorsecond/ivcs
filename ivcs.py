@@ -60,7 +60,7 @@ class MainWindow(ivcs_mainwindow.QtGui.QMainWindow, ivcs_mainwindow.Ui_MainWindo
         self.actionSettings.triggered.connect(self.handle_settings_click)
         self.menuBranch.triggered.connect(self.handle_new_branch_click)
 
-        self.open_database()
+        self.open_database(self.username)
 
     def handle_settings_click(self):
         """
@@ -80,12 +80,12 @@ class MainWindow(ivcs_mainwindow.QtGui.QMainWindow, ivcs_mainwindow.Ui_MainWindo
 
         pass
 
-    def open_database(self):
+    def open_database(self, username):
         """
         Opens up the DB
         :return: None
         """
-
+        self.username = username
         logging.info("Querying the database for user projects.")
 
         queries = DatabaseQueries(self.app_dir)
@@ -116,6 +116,7 @@ class SettingsWindow(settings_window.QtGui.QDialog, settings_window.Ui_Dialog):
         self.change_detection_method = None
 
         fs_utils = filesystem_utils.GeneralFunctions()
+        self.main_window = MainWindow()
 
         # Load current settings
         self.app_dir = fs_utils.get_application_path()
@@ -181,6 +182,7 @@ class SettingsWindow(settings_window.QtGui.QDialog, settings_window.Ui_Dialog):
                     if len(self.DataStoragePathEntry.text()) >= 2:
                         try:
                             self.write_config()
+                            self.main_window.open_database(self.username)
                         except Exception as e:
                             logging.error("Could not write to configuration file. The write_config "
                                           "function returned: {}".format(e))
