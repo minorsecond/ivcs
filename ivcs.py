@@ -253,6 +253,9 @@ class ProjectsWindow(ManageProjectsWindow.QtGui.QDialog,
 
         # First, clear the user list so that they don't stack up
         self.UsersList.clear()
+        self.ProjectDirectoriesList.clear()
+
+        project_id = None
         project_name = self.ProjectsList.currentItem().text()
         project_users = self.queries.get_users_for_project(project_name)
 
@@ -263,6 +266,13 @@ class ProjectsWindow(ManageProjectsWindow.QtGui.QDialog,
 
             self.UsersList.addItem(username)
 
+        project_directories = self.queries.get_directories_for_project(project_id)
+
+        for row in project_directories:
+            project_id = row[0]
+            directory = row[1]
+
+            self.ProjectDirectoriesList.addItem(directory)
 
 class CheckoutStatusWindow(CheckoutStatus.QtGui.QDialog, CheckoutStatus.Ui_Dialog):
     """

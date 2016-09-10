@@ -156,7 +156,7 @@ class DatabaseQueries:
         directories_in_project = []
         directories = None
 
-        project = self.session.query(Projects).filter_by(name=project).first()
+        project = self.session.query(Projects).filter_by(id=project).first()
 
         try:
             directories = self.session.query(Directories).filter_by(project_id=project.id).all()
