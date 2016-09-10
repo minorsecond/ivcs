@@ -6,6 +6,7 @@ from sqlalchemy.orm import sessionmaker, exc
 from os.path import join
 import logging
 
+
 class ImageryDatabase:
     """
     Functions for manipulating imagery database
@@ -71,7 +72,6 @@ class DatabaseQueries:
                     return user
                 else:
                     uid = user.id
-
                     projects_for_user = self.session.query(user_projects).filter_by(user_id=uid).all()
 
                     for item in projects_for_user:
@@ -82,8 +82,8 @@ class DatabaseQueries:
                             project_ids.append(project_id)
 
                         else:
-                            raise ValueError("Returned user id that does not match what was requested in "
-                                             "query_objects_for_user()")
+                            raise ValueError("Returned user id that does not match what was "
+                                             "requested in query_objects_for_user()")
 
         return set(project_ids)
 
