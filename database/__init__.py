@@ -51,7 +51,7 @@ class DatabaseQueries:
             result = self.session.query(Users).filter_by(username=user).one()
 
         except exc.NoResultFound:
-            print("Could not find any results for user {} in query_users().".
+            print("Could not find any results for user '{}' in query_users().".
                                     format(user))
             result = ValueError
 

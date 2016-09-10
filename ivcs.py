@@ -89,7 +89,7 @@ class MainWindow(ivcs_mainwindow.QtGui.QMainWindow, ivcs_mainwindow.Ui_MainWindo
         logging.info("Querying the database for user projects.")
 
         queries = DatabaseQueries(self.app_dir)
-        projects = queries.query_projects_for_user("bill")
+        projects = queries.query_projects_for_user(self.username)
 
         if projects is ValueError:  # Could not find any users matching the name
             logging.error("Could not find any rows in Users DB for current username.")
