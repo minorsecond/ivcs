@@ -240,6 +240,9 @@ class ProjectsWindow(ManageProjectsWindow.QtGui.QDialog,
         # Do something when an item in the projects list is clicked
         self.ProjectsList.itemClicked.connect(self.handle_project_clicked)
 
+        # Handle the various add/remove buttons
+        self.AddProjectButton.clicked.connect(self.handle_add_project_clicked)
+
         for project in projects:
             project_id = project[0]
             project_name = project[1]
@@ -273,6 +276,14 @@ class ProjectsWindow(ManageProjectsWindow.QtGui.QDialog,
             directory = row[1]
 
             self.ProjectDirectoriesList.addItem(directory)
+
+    def handle_add_project_clicked(self):
+        """
+        Handles user clicking the add project button
+        :return: None
+        """
+
+        pass
 
 class CheckoutStatusWindow(CheckoutStatus.QtGui.QDialog, CheckoutStatus.Ui_Dialog):
     """
