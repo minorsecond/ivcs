@@ -6,6 +6,7 @@ from sqlalchemy import Column, Integer, String, Float, ForeignKey, Table, Foreig
 from sqlalchemy.types import DateTime, Boolean
 from sqlalchemy.orm import relationship
 from database.base import Base
+import bcrypt
 
 __all__ = ['projects_associations', 'Users', 'Projects', 'Directories', 'Imagery', 'Changelist',
            'Versions', 'Checkouts', 'Tasklists']
@@ -28,9 +29,20 @@ class Users(Base):
     __tablename__ = "Users"
     id = Column(Integer, primary_key=True, index=True)
     username = Column(String)
+    password = Column(Text)
     role = Column(Integer)
     checkouts = relationship("Checkouts")
     projects = relationship("Projects", secondary=user_projects)
+
+    def verify_password(self, password):
+        """
+        Validate password hash
+        :param password: string
+        :return:
+        """
+
+        pwhash = bcrypt.hashpw(password, self.password)
+        return self.password == pwhash
 
 
 class Projects(Base):
