@@ -494,24 +494,62 @@ class NewUserWindow(NewUserRegistrationWindow.QtGui.QDialog,
         :return: None
         """
 
+        valid_name = False
+        valid_username = False
+        valid_password = False
+        valid_email = False
+
         self.name = self.NewUserNameEntry.text()
         self.username = self.NewUserUsernameEntry.text()
         password = self.NewUserPasswordEntry.text()
         self.email = self.NewUserEmailEntry.text()
 
-        # Hash the password
-        self.password = PasswordHash.new(password, 12)
+        if len(self.name) <= 5:
+            raise_error_window("You must enter a name longer than 5 characers.")
+        else:
+            valid_name = True
 
-        # Create a dict to pass to new user creator
-        new_user = {
-            'name':         self.name,
-            'username':     self.username,
-            'password':     self.password,
-            'email':        self.email
-        }
+        if len(self.username) <= 3:
+            raise_error_window("You must enter a username longer than 3 characters.")
+        else:
+            valid_username = True
 
-        # Write to database
-        self.queries.add_new_user(new_user)
+        if len(password) < 4:
+            raise_error_window("You must enter a password longer than 3 characters.")
+        else:
+            valid_password = True
+
+        if len(self.email) < 5:
+            raise_error_window("You must enter an email address longer than 4 characters.")
+        else:
+            valid_email = True
+
+        if valid_name and valid_username and valid_password and valid_email:
+
+            # Hash the password
+            self.password = PasswordHash.new(password, 12)
+
+            # Create a dict to pass to new user creator
+            new_user = {
+                'name':         self.name,
+                'username':     self.username,
+                'password':     self.password,
+                'email':        self.email
+            }
+
+            # Write to database
+            result = self.queries.add_new_user(new_user)
+
+            if result == -1:
+                # Username already exists
+                raise_error_window("Username {} already exists in DB.".format(self.username))
+            elif result == -2:
+                # Email already exists
+                raise_error_window("Email address {} already exists in DB.".format(self.email))
+
+        else:
+            raise_new_user_window()
+
 
 class IoThread(QThread):
     """
@@ -578,6 +616,18 @@ def logger():
 
     return log
 
+def raise_error_window(text):
+    """
+    Raises the error window
+    :param text: Text to display
+    :return: None
+    """
+
+    error_window = ErrorMessagePopup(text)
+    error_window.show()
+    error_window.exec_()
+
+
 def raise_main_window():
     """
     Raises the main window
@@ -587,7 +637,18 @@ def raise_main_window():
     #main = ivcs_mainwindow.QtGui.QApplication(sys.argv)
     window = MainWindow()
     window.show()
-    sys.exit(main.exec_())
+    window.exec_()
+    #sys.exit(main.exec_())
+
+
+def raise_new_user_window():
+    """
+    Raises the new user window
+    :return:
+    """
+    new_user_window = NewUserWindow()
+    new_user_window.show()
+    new_user_window.exec_()
 
 
 def main():

@@ -262,25 +262,51 @@ class DatabaseQueries:
         Add a new user to the database
         :param user_info: a dict containing {name: {FULLNAME}, username: {USERNAME},
         password: {PASSWORD}, email: {EMAIL ADDRESS}}
-        :return: None
+        :return: code: -1 -> username already exists. -2 -> email already exists. 0 -> success
         """
-
+        result = None
         name = user_info['name']
         uname = user_info['username']
         pword = user_info['password']
         email_address = user_info['email']
 
-        new_user = Users(
-            full_name=name,
-            username=uname,
-            password=pword,
-            email=email_address
-        )
+        # Check if any of the values are already in the db
+        current_users = self.query_users(uname)
+        try:
+            current_email = result = self.session.query(Users).filter_by(email=email_address).one()
 
-        print(name)
-        print(uname)
-        print(pword)
-        print(email_address)
+            if uname == current_users:
+                result = -1
 
-        self.session.add(new_user)
-        self.session.commit()
+            elif email_address == current_email.email:
+                result = -2
+
+        except exc.NoResultFound:
+            pass  # This is good! We don't want there to be another instance of this.
+
+        if result is None:
+            try:
+                new_user = Users(
+                    full_name=name,
+                    username=uname,
+                    password=pword,
+                    email=email_address
+                )
+
+                print(name)
+                print(uname)
+                print(pword)
+                print(email_address)
+
+                self.session.add(new_user)
+                self.session.commit()
+
+                result = 0
+
+            except Exception as e:
+                text = "Could not add new user to database. The add_new_user function returned " \
+                       "{}".format(e)
+                logging.warning(text)
+                print(text)
+
+        return result
