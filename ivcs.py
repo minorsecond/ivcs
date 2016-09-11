@@ -673,7 +673,6 @@ def main():
         initialize_config(app_dir)
         logging.info("Created configuration file at {}".format(app_dir))
 
-
     # Instantiate the first windows
     login = LoginWindow.QtGui.QApplication(sys.argv)
     login_window = UserLoginWindow()
