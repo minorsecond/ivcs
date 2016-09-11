@@ -148,7 +148,8 @@ class Tasklists(Base):
 
 class TaskDependencies(Base):
     """
-    Relationships between tasks that denote dependencies
+    Relationships between tasks that denote dependencies. The task in the "dependency" column must
+    be completed before the task in the "task" column can be started.
     """
 
     __tablename__ = "TaskDependencies"
