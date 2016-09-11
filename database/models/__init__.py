@@ -156,6 +156,7 @@ class Tasklists(Base):
     task_description = Column(String)
     task_output_directory = Column(String)
     projects = relationship("Projects", secondary=project_tasks)
+    project = Column(Integer, ForeignKey("Projects.id"))
     task_complete = Column(Boolean)
 
 

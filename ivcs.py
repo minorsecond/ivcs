@@ -401,6 +401,25 @@ class AddTaskWindow(NewTaskForm.QtGui.QDialog, NewTaskForm.Ui_Dialog):
         NewTaskForm.Ui_Dialog.__init__(self)
         self.setupUi(self)
 
+        self.general_functions = filesystem_utils.GeneralFunctions()
+        self.app_dir = self.general_functions.get_application_path()
+        self.queries = DatabaseQueries(self.app_dir)
+
+        self.new_task_name = self.TaskLineEdit.text()
+        self.all_projects = self.queries.get_all_projects()
+        self.all_users = self.queries.query_all_users()
+        self.all_tasks = self.queries.query_all_tasks()  # For blocker/blockee selection
+
+        for user in self.all_users:
+            self.AssigneeComboBox.addItem(user.username)
+
+        for project in self.all_projects:
+            self.ProjectComboBox.addItem(project[1])
+
+        for task in self.all_tasks:  # TODO: prevent crossing blockers and blockees
+            self.BlockedByComboBox.addItem(task)
+            self.BlocksComboBox.addItem(task)
+
     # TODO: Populate combo boxes by querying the DB
 
 
@@ -468,14 +487,12 @@ class CheckoutStatusWindow(CheckoutStatus.QtGui.QDialog, CheckoutStatus.Ui_Check
     Status window for checking out files
     """
 
-    def __init__(self, files_to_copy):
+    def __init__(self):
         super(CheckoutStatusWindow, self).__init__()
         CheckoutStatus.QtGui.QDialog.__init__(self)
         CheckoutStatus.Ui_CheckoutStatusWindow.__init__(self)
         self.setupUi(self)
         self.setFixedSize(self.size())  # Prevent resizing
-
-        self.files_to_copy = files_to_copy  # List of paths to copy
 
     def update_progress_bar(self, read, total):
         """
@@ -549,14 +566,16 @@ class UserLoginWindow(LoginWindow.QtGui.QDialog, LoginWindow.Ui_LoginWIndow):
         entered_password = (self.LoginWindowPasswordEdit.text())
         userdata = self.queries.query_users(entered_username)
 
-        if self.queries.validate_password_input(userdata.username, entered_password):
+        password_verified = self.queries.validate_password_input(userdata.username, entered_password)
+
+        if password_verified:
             print("Passwords match!")
         else:
             text = "Incorrect password"
             raise_error_window(text)
             logging.warning(text)
 
-        if userdata != ValueError:
+        if userdata != ValueError and password_verified:
             raise_main_window()
 
 

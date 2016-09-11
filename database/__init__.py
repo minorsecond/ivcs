@@ -40,6 +40,21 @@ class DatabaseQueries:
         db_init = ImageryDatabase(path)
         self.session = db_init.load_session()
 
+    def query_all_users(self):
+        """
+        Returns a list of all users in DB
+        :return: List
+        """
+
+        try:
+            all_users = self.session.query(Users).all()
+            return all_users
+        except Exception as e:
+            text = "Failed returning all users in database/__init__.py/query_all_users(). The " \
+                   "function returned: {}".format(e)
+            print(text)
+            logging.error(text)
+
     def query_users(self, user):
         """
         Queries the projects table
@@ -320,4 +335,27 @@ class DatabaseQueries:
         user_table = Users()
         user = self.session.query(Users).filter_by(username=uname).one()
         return user.verify_password(password)
+
+    def query_all_tasks(self):
+        """
+        Returns list of tuples containing projects and tasks
+        :return: [(project_name, task_name) .. ]
+        """
+
+        task_list = []
+        tasks = self.session.query(Tasklists).all()
+
+        for task in tasks:
+            project_id = task.project
+            task_id = task.id
+            task_name = task.name
+            task_list.append(task_name)
+
+            project = self.session.query(Projects).filter_by(id=project_id).one()
+            project_name = project.name
+
+            result = (project_name, task_name)
+            task_list.append(result)
+
+        return task_list
 
