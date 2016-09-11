@@ -24,6 +24,7 @@ from PyQt4.QtGui import QFileDialog, QDialog
 import compressor
 import filesystem_utils
 
+
 class MainWindow(ivcs_mainwindow.QtGui.QMainWindow, ivcs_mainwindow.Ui_MainWindow):
     def __init__(self):
         ivcs_mainwindow.QtGui.QMainWindow.__init__(self)
@@ -32,6 +33,8 @@ class MainWindow(ivcs_mainwindow.QtGui.QMainWindow, ivcs_mainwindow.Ui_MainWindo
         self.image_extensions = []
         self.general_functions = filesystem_utils.GeneralFunctions()
         self.app_dir = self.general_functions.get_application_path()
+
+        self.setFixedSize(self.size())  # Prevent resizing
 
         if not os.path.exists(os.path.join(self.app_dir, 'ivcs.ini')):
             logging.warning("Couldn't find configuration file at {}, after it should have been "
@@ -127,6 +130,8 @@ class SettingsWindow(settings_window.QtGui.QDialog, settings_window.Ui_Dialog):
         self.username = None
         self.storage_path = None
         self.change_detection_method = None
+
+        self.setFixedSize(self.size())  # Prevent resizing
 
         fs_utils = filesystem_utils.GeneralFunctions()
         self.main_window = MainWindow()
@@ -228,6 +233,8 @@ class ProjectsWindow(ManageProjectsWindow.QtGui.QDialog,
         ManageProjectsWindow.QtGui.QDialog.__init__(self)
         ManageProjectsWindow.Ui_ManageProjectsWindow.__init__(self)
         self.setupUi(self)
+
+        self.setFixedSize(self.size())  # Prevent resizing
 
         # Set the global application path
         general_functions = filesystem_utils.GeneralFunctions()
@@ -372,6 +379,9 @@ class AddProjectWindow(AddProject.QtGui.QDialog, AddProject.Ui_Dialog):
         AddProject.QtGui.QDialog.__init__(self)
         AddProject.Ui_Dialog.__init__(self)
         self.setupUi(self)
+
+        self.setFixedSize(self.size())  # Prevent resizing
+
         general_functions = filesystem_utils.GeneralFunctions()
         self.app_dir = general_functions.get_application_path()
 
@@ -412,6 +422,9 @@ class ErrorMessagePopup(ErrorMessage.QtGui.QDialog, ErrorMessage.Ui_ErrorWindow)
         ErrorMessage.QtGui.QDialog.__init__(self)
         ErrorMessage.Ui_ErrorWindow.__init__(self)
         self.setupUi(self)
+
+        self.setFixedSize(self.size())  # Prevent resizing
+
         self.ErrorMessage.setText(text)
 
 
@@ -425,6 +438,8 @@ class CheckoutStatusWindow(CheckoutStatus.QtGui.QDialog, CheckoutStatus.Ui_Dialo
         CheckoutStatus.QtGui.QDialog.__init__(self)
         CheckoutStatus.Ui_Dialog.__init__(self)
         self.setupUi(self)
+
+        self.setFixedSize(self.size())  # Prevent resizing
 
     def update_progress_bar(self, read, total):
         """
@@ -445,6 +460,8 @@ class UserLoginWindow(LoginWindow.QtGui.QDialog, LoginWindow.Ui_LoginWIndow):
         LoginWindow.QtGui.QDialog.__init__(self)
         LoginWindow.Ui_LoginWIndow.__init__(self)
         self.setupUi(self)
+
+        self.setFixedSize(self.size())  # Prevent resizing
 
         # Handle button clicks
         self.RegisterNewUserButton.clicked.connect(self.handle_register_button_clicked)
@@ -481,6 +498,8 @@ class NewUserWindow(NewUserRegistrationWindow.QtGui.QDialog,
         NewUserRegistrationWindow.QtGui.QDialog.__init__(self)
         NewUserRegistrationWindow.Ui_NewUserWindow.__init__(self)
         self.setupUi(self)
+
+        self.setFixedSize(self.size())  # Prevent resizing
 
         self.general_functions = filesystem_utils.GeneralFunctions()
         self.app_dir = self.general_functions.get_application_path()
