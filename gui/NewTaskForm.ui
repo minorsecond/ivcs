@@ -46,7 +46,7 @@
    <property name="geometry">
     <rect>
      <x>14</x>
-     <y>184</y>
+     <y>188</y>
      <width>49</width>
      <height>16</height>
     </rect>
@@ -59,7 +59,7 @@
    <property name="geometry">
     <rect>
      <x>14</x>
-     <y>96</y>
+     <y>94</y>
      <width>65</width>
      <height>16</height>
     </rect>
@@ -72,7 +72,7 @@
    <property name="geometry">
     <rect>
      <x>14</x>
-     <y>234</y>
+     <y>238</y>
      <width>49</width>
      <height>16</height>
     </rect>
@@ -104,46 +104,6 @@
     </rect>
    </property>
   </widget>
-  <widget class="QLineEdit" name="ProjectLineEdit">
-   <property name="geometry">
-    <rect>
-     <x>120</x>
-     <y>182</y>
-     <width>113</width>
-     <height>21</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="AssigneeLineEdit">
-   <property name="geometry">
-    <rect>
-     <x>120</x>
-     <y>92</y>
-     <width>113</width>
-     <height>21</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="BlocksLineEdit">
-   <property name="geometry">
-    <rect>
-     <x>120</x>
-     <y>230</y>
-     <width>113</width>
-     <height>21</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="BlockedByLineEdit">
-   <property name="geometry">
-    <rect>
-     <x>120</x>
-     <y>138</y>
-     <width>113</width>
-     <height>21</height>
-    </rect>
-   </property>
-  </widget>
   <widget class="QCalendarWidget" name="EstimatedCompletionCalendar">
    <property name="geometry">
     <rect>
@@ -168,6 +128,46 @@
    </property>
    <property name="alignment">
     <set>Qt::AlignCenter</set>
+   </property>
+  </widget>
+  <widget class="QComboBox" name="BlockedByComboBox">
+   <property name="geometry">
+    <rect>
+     <x>118</x>
+     <y>138</y>
+     <width>119</width>
+     <height>26</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QComboBox" name="BlocksComboBox">
+   <property name="geometry">
+    <rect>
+     <x>118</x>
+     <y>230</y>
+     <width>119</width>
+     <height>26</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QComboBox" name="AssigneeComboBox">
+   <property name="geometry">
+    <rect>
+     <x>118</x>
+     <y>90</y>
+     <width>119</width>
+     <height>26</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QComboBox" name="ProjectComboBox">
+   <property name="geometry">
+    <rect>
+     <x>118</x>
+     <y>184</y>
+     <width>119</width>
+     <height>26</height>
+    </rect>
    </property>
   </widget>
  </widget>

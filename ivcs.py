@@ -21,7 +21,7 @@ from database import ImageryDatabase, DatabaseQueries
 from database.passwords import PasswordHash
 from gui import commit_message_window, ivcs_mainwindow, settings_window, view_message_window, \
     CheckoutStatus, ManageProjectsWindow, AddProject, ErrorMessage, NewUserRegistrationWindow, \
-    LoginWindow
+    LoginWindow, NewTaskForm
 from PyQt4.QtGui import QFileDialog, QDialog, QLineEdit
 import compressor
 import filesystem_utils
@@ -271,6 +271,7 @@ class ProjectsWindow(ManageProjectsWindow.QtGui.QDialog,
         self.RemoveProjectButton.clicked.connect(self.handle_remove_project_button)
         self.AddProjectDirectoryButton.clicked.connect(self.handle_project_add_dir_button)
         self.RemoveDirectoryFromProjectButton.clicked.connect(self.handle_delete_project_dir_button)
+        self.AddTaskButton.clicked.connect(self.handle_add_task_button)
 
         self.update_projects_list()
 
@@ -383,6 +384,22 @@ class ProjectsWindow(ManageProjectsWindow.QtGui.QDialog,
         self.queries.delete_project_directory(selected_project, selected_directory)
 
         self.update_directories_list(project_id)
+
+    def handle_add_task_button(self):
+        """Opens the new task window"""
+        new_task_window = AddTaskWindow()
+        new_task_window.show()
+        new_task_window.exec_()
+
+
+class AddTaskWindow(NewTaskForm.QtGui.QDialog, NewTaskForm.Ui_Dialog):
+    """New Task Entry"""
+
+    def __init__(self):
+        super(AddTaskWindow, self).__init__()
+        NewTaskForm.QtGui.QDialog.__init__(self)
+        NewTaskForm.Ui_Dialog.__init__(self)
+        self.setupUi(self)
 
 
 class AddProjectWindow(AddProject.QtGui.QDialog, AddProject.Ui_Dialog):
