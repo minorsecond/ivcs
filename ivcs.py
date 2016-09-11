@@ -20,7 +20,7 @@ from database.passwords import PasswordHash
 from gui import commit_message_window, ivcs_mainwindow, settings_window, view_message_window, \
     CheckoutStatus, ManageProjectsWindow, AddProject, ErrorMessage, NewUserRegistrationWindow, \
     LoginWindow
-from PyQt4.QtGui import QFileDialog
+from PyQt4.QtGui import QFileDialog, QDialog
 import compressor
 import filesystem_utils
 
@@ -430,17 +430,19 @@ class CheckoutStatusWindow(CheckoutStatus.QtGui.QDialog, CheckoutStatus.Ui_Dialo
         print("Total: {}".format(total))
 
 
-class LoginWindow(LoginWindow.QtGui.QDialog, LoginWindow.Ui_LoginWIndow):
+class UserLoginWindow(LoginWindow.QtGui.QDialog, LoginWindow.Ui_LoginWIndow):
     """Login window"""
 
     def __init__(self):
-        super(LoginWindow, self).__init__()
         LoginWindow.QtGui.QDialog.__init__(self)
         LoginWindow.Ui_LoginWIndow.__init__(self)
         self.setupUi(self)
 
         # Handle button clicks
         self.RegisterNewUserButton.clicked.connect(self.handle_register_button_clicked)
+
+        ## handle "OK" clicked in buttonbox
+        self.buttonBox.button(LoginWindow.QtGui.QDialogButtonBox.Ok).clicked.connect(self.handle_login)
 
     def handle_register_button_clicked(self):
         """
@@ -457,11 +459,13 @@ class LoginWindow(LoginWindow.QtGui.QDialog, LoginWindow.Ui_LoginWIndow):
         :return: None
         """
 
+        raise_main_window()
+
 
 class NewUserWindow(NewUserRegistrationWindow.QtGui.QDialog,
                     NewUserRegistrationWindow.Ui_NewUserWindow):
     """
-    Window for registring new users
+    Window for registering new users
     """
 
     def __init__(self):
@@ -493,7 +497,7 @@ class NewUserWindow(NewUserRegistrationWindow.QtGui.QDialog,
 
         # Hash the password
         self.password = PasswordHash.new(password, 12)
-        print(self.password)
+        print(self.password.hash)
 
 
 class IoThread(QThread):
@@ -561,6 +565,17 @@ def logger():
 
     return log
 
+def raise_main_window():
+    """
+    Raises the main window
+    :return: None
+    """
+
+    #main = ivcs_mainwindow.QtGui.QApplication(sys.argv)
+    window = MainWindow()
+    window.show()
+    sys.exit(main.exec_())
+
 
 def main():
     """
@@ -584,11 +599,12 @@ def main():
         initialize_config(app_dir)
         logging.info("Created configuration file at {}".format(app_dir))
 
-    app = ivcs_mainwindow.QtGui.QApplication(sys.argv)
-    window = MainWindow()
-    window.show()
-    sys.exit(app.exec_())
 
+    # Instantiate the first windows
+    login = LoginWindow.QtGui.QApplication(sys.argv)
+    login_window = UserLoginWindow()
+    login_window.show()
+    login.exec_()
 
 if __name__ == '__main__':
     main()
