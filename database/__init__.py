@@ -87,6 +87,16 @@ class DatabaseQueries:
 
         return set(project_ids)
 
+    def get_project_id_by_name(self, project_name):
+        """
+        Gets the project id from the project name
+        :return: int
+        """
+
+        project = self.session.query(Projects).filter_by(name=project_name).first()
+
+        return project.id
+
     def get_all_projects(self):
         """
         Returns a list of all project names and IDs
@@ -206,4 +216,43 @@ class DatabaseQueries:
         """
 
         self.session.query(Projects).filter_by(name=project).delete()
+        self.session.commit()
+
+    def add_project_directory(self, project, path):
+        """
+        Adds a directory to the project
+        :return: None
+        """
+
+        current_directories = []
+        project_id = self.get_project_id_by_name(project)
+        cdir = self.get_directories_for_project(project_id)
+
+        for item in cdir:
+            current_directories.append(item[1])
+
+        if path not in current_directories:
+
+            new_directory = Directories(
+                project_id=project_id,
+                root=path
+            )
+
+            self.session.add(new_directory)
+            self.session.commit()
+
+        else:
+            text = "User attempted to enter a directory that was already specified for project: " \
+                   "{}".format(path)
+            logging.warning(text)
+            print(text)
+
+    def delete_project_directory(self, project_name, selected_dir):
+        """
+        Deletes a directory reference for a project
+        :return: None
+        """
+
+        proj_id = self.get_project_id_by_name(project_name)
+        self.session.query(Directories).filter_by(project_id=proj_id, root=selected_dir).delete()
         self.session.commit()

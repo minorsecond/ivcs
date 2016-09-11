@@ -18,6 +18,7 @@ from sqlalchemy.orm import relationship, backref, sessionmaker
 from database import ImageryDatabase, DatabaseQueries
 from gui import commit_message_window, ivcs_mainwindow, settings_window, view_message_window, \
     CheckoutStatus, ManageProjectsWindow, AddProject, ErrorMessage
+from PyQt4.QtGui import QFileDialog
 import compressor
 import filesystem_utils
 
@@ -243,6 +244,8 @@ class ProjectsWindow(ManageProjectsWindow.QtGui.QDialog,
         # Handle the various add/remove buttons
         self.AddProjectButton.clicked.connect(self.handle_add_project_clicked)
         self.RemoveProjectButton.clicked.connect(self.handle_remove_project_button)
+        self.AddProjectDirectoryButton.clicked.connect(self.handle_project_add_dir_button)
+        self.RemoveDirectoryFromProjectButton.clicked.connect(self.handle_delete_project_dir_button)
 
         self.update_projects_list()
 
@@ -260,16 +263,44 @@ class ProjectsWindow(ManageProjectsWindow.QtGui.QDialog,
             project_name = project[1]
             self.ProjectsList.addItem(project_name)
 
+    def update_directories_list(self, project_id):
+        """
+        Update the list of directories
+        :return: None
+        """
+
+        self.ProjectDirectoriesList.clear()
+
+        project_directories = self.queries.get_directories_for_project(project_id)
+        for row in project_directories:
+            project_id = row[0]
+            directory = row[1]
+            if len(directory) > 0:
+                self.ProjectDirectoriesList.addItem(directory)
+
     def handle_remove_project_button(self):
         """
         Handles user clicking the remove project button
         :return: None
         """
+
+        project = self.ProjectsList.currentItem().text()
+
         for item in self.ProjectsList.selectedItems():
             self.queries.delete_project(item.text())
 
-        self.update_projects_list()
+    def handle_project_add_dir_button(self):
+        """
+        Handle user clicking the add project directory button
+        :return: None
+        """
+        project = self.ProjectsList.currentItem().text()
+        project_id = self.queries.get_project_id_by_name(project)
+        directory = str(QFileDialog.getExistingDirectory(self, "Select Directory"))
 
+        self.queries.add_project_directory(project, directory)
+
+        self.update_directories_list(project_id)
 
     def handle_project_clicked(self):
         """
@@ -283,6 +314,7 @@ class ProjectsWindow(ManageProjectsWindow.QtGui.QDialog,
 
         project_id = None
         project_name = self.ProjectsList.currentItem().text()
+        project_id = self.queries.get_project_id_by_name(project_name)
         project_users = self.queries.get_users_for_project(project_name)
 
         for item in project_users:
@@ -297,8 +329,8 @@ class ProjectsWindow(ManageProjectsWindow.QtGui.QDialog,
         for row in project_directories:
             project_id = row[0]
             directory = row[1]
-
-            self.ProjectDirectoriesList.addItem(directory)
+            if len(directory) > 0:
+                self.ProjectDirectoriesList.addItem(directory)
 
     def handle_add_project_clicked(self):
         """
@@ -310,7 +342,18 @@ class ProjectsWindow(ManageProjectsWindow.QtGui.QDialog,
         add_project_window.show()
         add_project_window.exec_()
 
-        self.update_projects_list()
+    def handle_delete_project_dir_button(self):
+        """
+        Handles user clicking the delete dir button
+        :return: None
+        """
+        selected_project = self.ProjectsList.currentItem().text()
+        project_id = self.queries.get_project_id_by_name(selected_project)
+        selected_directory = self.ProjectDirectoriesList.currentItem().text()
+
+        self.queries.delete_project_directory(selected_project, selected_directory)
+
+        self.update_directories_list(project_id)
 
 
 class AddProjectWindow(AddProject.QtGui.QDialog, AddProject.Ui_Dialog):
