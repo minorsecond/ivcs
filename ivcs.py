@@ -291,6 +291,8 @@ class ProjectsWindow(ManageProjectsWindow.QtGui.QDialog,
         for item in self.ProjectsList.selectedItems():
             self.queries.delete_project(item.text())
 
+        self.update_projects_list()
+
     def handle_project_add_dir_button(self):
         """
         Handle user clicking the add project directory button
@@ -344,6 +346,8 @@ class ProjectsWindow(ManageProjectsWindow.QtGui.QDialog,
         add_project_window.show()
         add_project_window.exec_()
 
+        self.update_projects_list()
+
     def handle_delete_project_dir_button(self):
         """
         Handles user clicking the delete dir button
@@ -384,8 +388,11 @@ class AddProjectWindow(AddProject.QtGui.QDialog, AddProject.Ui_Dialog):
         :return: None
         """
 
+        self.general_functions = filesystem_utils.GeneralFunctions()
+        self.app_dir = self.general_functions.get_application_path()
         project_name = self.ProjectNameEntryEdit.text()
         result = self.db.add_new_project(project_name)
+        self.queries = DatabaseQueries(self.app_dir)
 
         if result == 1:  # User tried to enter a project that already exists
             # Bring up error message
@@ -393,6 +400,7 @@ class AddProjectWindow(AddProject.QtGui.QDialog, AddProject.Ui_Dialog):
             error_window = ErrorMessagePopup(text)
             error_window.show()
             error_window.exec_()
+
 
 class ErrorMessagePopup(ErrorMessage.QtGui.QDialog, ErrorMessage.Ui_ErrorWindow):
     """
