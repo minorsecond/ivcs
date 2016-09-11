@@ -22,7 +22,7 @@ from database.passwords import PasswordHash
 from gui import commit_message_window, ivcs_mainwindow, settings_window, view_message_window, \
     CheckoutStatus, ManageProjectsWindow, AddProject, ErrorMessage, NewUserRegistrationWindow, \
     LoginWindow
-from PyQt4.QtGui import QFileDialog, QDialog
+from PyQt4.QtGui import QFileDialog, QDialog, QLineEdit
 import compressor
 import filesystem_utils
 
@@ -469,11 +469,31 @@ class UserLoginWindow(LoginWindow.QtGui.QDialog, LoginWindow.Ui_LoginWIndow):
         self.queries = DatabaseQueries(self.app_dir)
         self.setFixedSize(self.size())  # Prevent resizing
 
+        # Hide password entry (show asterisks)
+        self.LoginWindowPasswordEdit.setEchoMode(QLineEdit.Password)
+
+        # Disable the OK button at first.
+        self.buttonBox.button(LoginWindow.QtGui.QDialogButtonBox.Ok).setEnabled(False)
+
+        # Enable the "OK" button once user has entered text into fields
+        self.LoginWindowUsernameEdit.textChanged.connect(self.line_edit_text_changed)
+        self.LoginWindowPasswordEdit.textChanged.connect(self.line_edit_text_changed)
+
         # Handle button clicks
         self.RegisterNewUserButton.clicked.connect(self.handle_register_button_clicked)
 
         ## handle "OK" clicked in buttonbox
         self.buttonBox.button(LoginWindow.QtGui.QDialogButtonBox.Ok).clicked.connect(self.handle_login)
+
+    def line_edit_text_changed(self):
+        """
+        Enable the OK button when all fields contain data
+        :return: None
+        """
+
+        if len(self.LoginWindowUsernameEdit.text()) > 3 and \
+                        len(self.LoginWindowPasswordEdit.text()) > 4:
+            self.buttonBox.button(LoginWindow.QtGui.QDialogButtonBox.Ok).setEnabled(True)
 
     def handle_register_button_clicked(self):
         """
