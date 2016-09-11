@@ -18,7 +18,8 @@ from sqlalchemy.orm import relationship, backref, sessionmaker
 from database import ImageryDatabase, DatabaseQueries
 from database.passwords import PasswordHash
 from gui import commit_message_window, ivcs_mainwindow, settings_window, view_message_window, \
-    CheckoutStatus, ManageProjectsWindow, AddProject, ErrorMessage, NewUserRegistrationWindow
+    CheckoutStatus, ManageProjectsWindow, AddProject, ErrorMessage, NewUserRegistrationWindow, \
+    LoginWindow
 from PyQt4.QtGui import QFileDialog
 import compressor
 import filesystem_utils
@@ -427,6 +428,34 @@ class CheckoutStatusWindow(CheckoutStatus.QtGui.QDialog, CheckoutStatus.Ui_Dialo
 
         print("Read: {}".format(read))
         print("Total: {}".format(total))
+
+
+class LoginWindow(LoginWindow.QtGui.QDialog, LoginWindow.Ui_LoginWIndow):
+    """Login window"""
+
+    def __init__(self):
+        super(LoginWindow, self).__init__()
+        LoginWindow.QtGui.QDialog.__init__(self)
+        LoginWindow.Ui_LoginWIndow.__init__(self)
+        self.setupUi(self)
+
+        # Handle button clicks
+        self.RegisterNewUserButton.clicked.connect(self.handle_register_button_clicked)
+
+    def handle_register_button_clicked(self):
+        """
+        Calls ths the NewUserWindow GUI class when user clicks the "Register" button.
+        :return: None
+        """
+        new_user_window = NewUserWindow()
+        new_user_window.show()
+        new_user_window.exec_()
+
+    def handle_login(self):
+        """
+        Handles an existing user logging in.
+        :return: None
+        """
 
 
 class NewUserWindow(NewUserRegistrationWindow.QtGui.QDialog,
