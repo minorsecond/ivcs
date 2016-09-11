@@ -4,8 +4,9 @@ Contains the SQL database definitions
 
 from sqlalchemy import Column, Integer, String, Float, ForeignKey, Table, ForeignKeyConstraint
 from sqlalchemy.types import DateTime, Boolean
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, validates
 from database.base import Base
+from database.passwords import Password
 import bcrypt
 
 __all__ = ['projects_associations', 'Users', 'Projects', 'Directories', 'Imagery', 'Changelist',
@@ -29,20 +30,14 @@ class Users(Base):
     __tablename__ = "Users"
     id = Column(Integer, primary_key=True, index=True)
     username = Column(String)
-    #password = Column(Text)
+    password = Column(Password)
     role = Column(Integer)
     checkouts = relationship("Checkouts")
     projects = relationship("Projects", secondary=user_projects)
 
-    def verify_password(self, password):
-        """
-        Validate password hash
-        :param password: string
-        :return:
-        """
-
-        pwhash = bcrypt.hashpw(password, self.password)
-        return self.password == pwhash
+    @validates('password')
+    def _validate_password(self, key, password):
+        return getattr(type(self), key).type.validator(password)
 
 
 class Projects(Base):

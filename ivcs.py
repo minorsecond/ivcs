@@ -16,8 +16,9 @@ from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, backref, sessionmaker
 from database import ImageryDatabase, DatabaseQueries
+from database.passwords import PasswordHash
 from gui import commit_message_window, ivcs_mainwindow, settings_window, view_message_window, \
-    CheckoutStatus, ManageProjectsWindow, AddProject, ErrorMessage
+    CheckoutStatus, ManageProjectsWindow, AddProject, ErrorMessage, NewUserRegistrationWindow
 from PyQt4.QtGui import QFileDialog
 import compressor
 import filesystem_utils
@@ -426,6 +427,44 @@ class CheckoutStatusWindow(CheckoutStatus.QtGui.QDialog, CheckoutStatus.Ui_Dialo
 
         print("Read: {}".format(read))
         print("Total: {}".format(total))
+
+
+class NewUserWindow(NewUserRegistrationWindow.QtGui.QDialog,
+                    NewUserRegistrationWindow.Ui_NewUserWindow):
+    """
+    Window for registring new users
+    """
+
+    def __init__(self):
+        super(NewUserWindow, self).__init__()
+        NewUserRegistrationWindow.QtGui.QDialog.__init__(self)
+        NewUserRegistrationWindow.Ui_NewUserWindow.__init__(self)
+        self.setupUi(self)
+
+        # User variables
+        self.name = None
+        self.username = None
+        self.password = None
+        self.email = None
+
+        # handle "OK" clicked in buttonbox
+        self.buttonBox.button(NewUserRegistrationWindow.QtGui.QDialogButtonBox.Ok).clicked.\
+            connect(self.create_new_user)
+
+    def create_new_user(self):
+        """
+        Tries to create a new user when the OK button is clicked
+        :return: None
+        """
+
+        self.name = self.NewUserNameEntry.text()
+        self.username = self.NewUserUsernameEntry.text()
+        password = self.NewUserPasswordEntry.text()
+        self.email = self.NewUserEmailEntry.text()
+
+        # Hash the password
+        self.password = PasswordHash.new(password, 12)
+        print(self.password)
 
 
 class IoThread(QThread):
