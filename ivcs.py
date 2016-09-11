@@ -426,6 +426,7 @@ class AddTaskWindow(NewTaskForm.QtGui.QDialog, NewTaskForm.Ui_Dialog):
         for project in self.all_projects:
             self.ProjectComboBox.addItem(project[1])
 
+        # TODO: Allow setting of "None" in blockers & blockees. (Make this the default for each)
         for task in self.all_tasks:  # TODO: prevent crossing blockers and blockees
             self.BlockedByComboBox.addItem(task[1])
             self.BlocksComboBox.addItem(task[1])
