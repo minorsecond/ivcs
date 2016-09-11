@@ -10,8 +10,10 @@ import ast
 import shutil
 import hashlib
 import datetime
+import bcrypt
 import logging
 from PyQt4.QtCore import QThread
+from hashlib import sha1
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, backref, sessionmaker
@@ -461,6 +463,10 @@ class UserLoginWindow(LoginWindow.QtGui.QDialog, LoginWindow.Ui_LoginWIndow):
         LoginWindow.Ui_LoginWIndow.__init__(self)
         self.setupUi(self)
 
+        self.general_functions = filesystem_utils.GeneralFunctions()
+        self.app_dir = self.general_functions.get_application_path()
+
+        self.queries = DatabaseQueries(self.app_dir)
         self.setFixedSize(self.size())  # Prevent resizing
 
         # Handle button clicks
@@ -484,7 +490,20 @@ class UserLoginWindow(LoginWindow.QtGui.QDialog, LoginWindow.Ui_LoginWIndow):
         :return: None
         """
 
-        raise_main_window()
+        # TODO: Go back to login window if no data entered
+        entered_username = self.LoginWindowUsernameEdit.text()
+        entered_password = (self.LoginWindowPasswordEdit.text())
+        userdata = self.queries.query_users(entered_username)
+
+        if self.queries.validate_password_input(userdata.username, entered_password):
+            print("Passwords match!")
+        else:
+            text = "Incorrect password"
+            raise_error_window(text)
+            logging.warning(text)
+
+        if userdata != ValueError:
+            raise_main_window()
 
 
 class NewUserWindow(NewUserRegistrationWindow.QtGui.QDialog,
@@ -554,7 +573,8 @@ class NewUserWindow(NewUserRegistrationWindow.QtGui.QDialog,
         if valid_name and valid_username and valid_password and valid_email:
 
             # Hash the password
-            self.password = PasswordHash.new(password, 12)
+            #self.password = PasswordHash.new(password, 12)
+            self.password = (sha1(password.encode('utf-8'))).hexdigest()
 
             # Create a dict to pass to new user creator
             new_user = {

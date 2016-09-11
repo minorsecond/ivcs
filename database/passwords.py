@@ -4,6 +4,7 @@ Does the password hashing and checking
 """
 
 import bcrypt
+#from passlib.hash import bcrypt
 from sqlalchemy import Column, Integer, Text, TypeDecorator
 from sqlalchemy.orm import validates
 
@@ -15,8 +16,9 @@ basestring = (str,bytes)
 
 class PasswordHash(object):
     def __init__(self, hash_):
-        #assert len(hash_) == 60, "Hash should be 60 chars."
-        #assert hash_.count('$'), 'Bcrypt hash should have 3x "$"'
+        print(len(hash_))
+        assert len(hash_) - 3 == 60, "Hash should be 60 chars."
+        assert hash_.count('$'), 'Bcrypt hash should have 3x "$"'
         self.hash = str(hash_)
         self.rounds = int(self.hash.split('$')[2])
 

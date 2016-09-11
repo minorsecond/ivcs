@@ -43,6 +43,7 @@ class DatabaseQueries:
     def query_users(self, user):
         """
         Queries the projects table
+        :param user: Username to query
         :return: List of projects
         """
 
@@ -310,3 +311,13 @@ class DatabaseQueries:
                 print(text)
 
         return result
+
+    def validate_password_input(self, uname, password):
+        """
+        Validates user's password input against stored hash
+        :return:
+        """
+        user_table = Users()
+        user = self.session.query(Users).filter_by(username=uname).one()
+        return user.verify_password(password)
+

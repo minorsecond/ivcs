@@ -3,11 +3,13 @@ Contains the SQL database definitions
 """
 
 from sqlalchemy import Column, Integer, String, Float, ForeignKey, Table, ForeignKeyConstraint
-from sqlalchemy.types import DateTime, Boolean
+from sqlalchemy.types import DateTime, Boolean, Text
 from sqlalchemy.orm import relationship, validates
 from database.base import Base
 from database.passwords import Password
 import bcrypt
+from hashlib import sha1
+#from passlib.hash import bcrypt
 
 __all__ = ['projects_associations', 'Users', 'Projects', 'Directories', 'Imagery', 'Changelist',
            'Versions', 'Checkouts', 'Tasklists']
@@ -31,15 +33,26 @@ class Users(Base):
     id = Column(Integer, primary_key=True, index=True)
     full_name = Column(String)
     username = Column(String)
-    password = Column(Password)
+    password = Column(String)
     email = Column(String)
     role = Column(Integer)
     checkouts = relationship("Checkouts")
     projects = relationship("Projects", secondary=user_projects)
 
-    @validates('password')
-    def _validate_password(self, key, password):
-        return getattr(type(self), key).type.validator(password)
+    #@validates('password')
+    #def _validate_password(self, key, password):
+    #    return getattr(type(self), key).type.validator(password)
+
+    #def verify_password(self, entered_pw):
+    #    pw = entered_pw.encode('utf-8')
+    #    pwhash = bcrypt.hashpw(pw, self.password)
+    #    print(pw_hash)
+    #    return self.password == pwhash
+
+    def verify_password(self, password):
+        pw = password.encode('utf-8')
+        hashed_pw = (sha1(pw)).hexdigest()
+        return self.password == hashed_pw
 
 
 class Projects(Base):
