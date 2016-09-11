@@ -29,8 +29,10 @@ class Users(Base):
 
     __tablename__ = "Users"
     id = Column(Integer, primary_key=True, index=True)
+    full_name = Column(String)
     username = Column(String)
     password = Column(Password)
+    email = Column(String)
     role = Column(Integer)
     checkouts = relationship("Checkouts")
     projects = relationship("Projects", secondary=user_projects)

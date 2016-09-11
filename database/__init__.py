@@ -256,3 +256,31 @@ class DatabaseQueries:
         proj_id = self.get_project_id_by_name(project_name)
         self.session.query(Directories).filter_by(project_id=proj_id, root=selected_dir).delete()
         self.session.commit()
+
+    def add_new_user(self, user_info):
+        """
+        Add a new user to the database
+        :param user_info: a dict containing {name: {FULLNAME}, username: {USERNAME},
+        password: {PASSWORD}, email: {EMAIL ADDRESS}}
+        :return: None
+        """
+
+        name = user_info['name']
+        uname = user_info['username']
+        pword = user_info['password']
+        email_address = user_info['email']
+
+        new_user = Users(
+            full_name=name,
+            username=uname,
+            password=pword,
+            email=email_address
+        )
+
+        print(name)
+        print(uname)
+        print(pword)
+        print(email_address)
+
+        self.session.add(new_user)
+        self.session.commit()

@@ -474,6 +474,10 @@ class NewUserWindow(NewUserRegistrationWindow.QtGui.QDialog,
         NewUserRegistrationWindow.Ui_NewUserWindow.__init__(self)
         self.setupUi(self)
 
+        self.general_functions = filesystem_utils.GeneralFunctions()
+        self.app_dir = self.general_functions.get_application_path()
+        self.queries = DatabaseQueries(self.app_dir)
+
         # User variables
         self.name = None
         self.username = None
@@ -497,8 +501,17 @@ class NewUserWindow(NewUserRegistrationWindow.QtGui.QDialog,
 
         # Hash the password
         self.password = PasswordHash.new(password, 12)
-        print(self.password.hash)
 
+        # Create a dict to pass to new user creator
+        new_user = {
+            'name':         self.name,
+            'username':     self.username,
+            'password':     self.password,
+            'email':        self.email
+        }
+
+        # Write to database
+        self.queries.add_new_user(new_user)
 
 class IoThread(QThread):
     """
