@@ -242,6 +242,7 @@ class ProjectsWindow(ManageProjectsWindow.QtGui.QDialog,
 
         # Handle the various add/remove buttons
         self.AddProjectButton.clicked.connect(self.handle_add_project_clicked)
+        self.RemoveProjectButton.clicked.connect(self.handle_remove_project_button)
 
         self.update_projects_list()
 
@@ -258,6 +259,17 @@ class ProjectsWindow(ManageProjectsWindow.QtGui.QDialog,
             project_id = project[0]
             project_name = project[1]
             self.ProjectsList.addItem(project_name)
+
+    def handle_remove_project_button(self):
+        """
+        Handles user clicking the remove project button
+        :return: None
+        """
+        for item in self.ProjectsList.selectedItems():
+            self.queries.delete_project(item.text())
+
+        self.update_projects_list()
+
 
     def handle_project_clicked(self):
         """

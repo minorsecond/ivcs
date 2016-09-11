@@ -197,3 +197,13 @@ class DatabaseQueries:
             return 0
         else:
             return 1
+
+    def delete_project(self, project):
+        """
+        Deletes project from database
+        :param project: a project name
+        :return: None
+        """
+
+        self.session.query(Projects).filter_by(name=project).delete()
+        self.session.commit()
