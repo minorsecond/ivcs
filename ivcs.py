@@ -64,11 +64,25 @@ class MainWindow(ivcs_mainwindow.QtGui.QMainWindow, ivcs_mainwindow.Ui_MainWindo
             self.image_extensions = ast.literal_eval(self.config.get("settings", "imageextensions"))
             self.storage_path = self.config.get("settings", "datapath")
 
+            # Handle main window buttons
+            self.CheckoutButton.clicked.connect(self.handle_checkout_button_click)
+
         # Menu Bar Actions
         self.actionSettings.triggered.connect(self.handle_settings_click)
         self.actionManage_Projects.triggered.connect(self.handle_manage_projects_click)
 
         self.open_database(self.username)
+
+    def handle_checkout_button_click(self):
+        """
+        Opens the checkout status window and initiates file transfer from network
+        :return: None
+        """
+
+        checkout_status = CheckoutStatusWindow()
+        checkout_status.show()
+        checkout_status.exec_()
+
 
     def handle_settings_click(self):
         """
@@ -430,7 +444,7 @@ class ErrorMessagePopup(ErrorMessage.QtGui.QDialog, ErrorMessage.Ui_ErrorWindow)
         self.ErrorMessage.setText(text)
 
 
-class CheckoutStatusWindow(CheckoutStatus.QtGui.QDialog, CheckoutStatus.Ui_Dialog):
+class CheckoutStatusWindow(CheckoutStatus.QtGui.QDialog, CheckoutStatus.Ui_CheckoutStatusWindow):
     """
     Status window for checking out files
     """
@@ -438,7 +452,7 @@ class CheckoutStatusWindow(CheckoutStatus.QtGui.QDialog, CheckoutStatus.Ui_Dialo
     def __init__(self):
         super(CheckoutStatusWindow, self).__init__()
         CheckoutStatus.QtGui.QDialog.__init__(self)
-        CheckoutStatus.Ui_Dialog.__init__(self)
+        CheckoutStatus.Ui_CheckoutStatusWindow.__init__(self)
         self.setupUi(self)
 
         self.setFixedSize(self.size())  # Prevent resizing
