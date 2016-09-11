@@ -538,11 +538,20 @@ class NewUserWindow(NewUserRegistrationWindow.QtGui.QDialog,
         NewUserRegistrationWindow.Ui_NewUserWindow.__init__(self)
         self.setupUi(self)
 
+        # Hide password entry (show asterisks)
+        self.NewUserPasswordEntry.setEchoMode(QLineEdit.Password)
+
         self.setFixedSize(self.size())  # Prevent resizing
 
         self.general_functions = filesystem_utils.GeneralFunctions()
         self.app_dir = self.general_functions.get_application_path()
         self.queries = DatabaseQueries(self.app_dir)
+
+        # Enable OK button if all fields contain text
+        self.NewUserNameEntry.textChanged.connect(self.line_edit_text_changed)
+        self.NewUserUsernameEntry.textChanged.connect(self.line_edit_text_changed)
+        self.NewUserPasswordEntry.textChanged.connect(self.line_edit_text_changed)
+        self.NewUserEmailEntry.textChanged.connect(self.line_edit_text_changed)
 
         # User variables
         self.name = None
@@ -553,6 +562,22 @@ class NewUserWindow(NewUserRegistrationWindow.QtGui.QDialog,
         # handle "OK" clicked in buttonbox
         self.buttonBox.button(NewUserRegistrationWindow.QtGui.QDialogButtonBox.Ok).clicked.\
             connect(self.create_new_user)
+
+        # Disable OK button at first
+        self.buttonBox.button(NewUserRegistrationWindow.QtGui.QDialogButtonBox.Ok). \
+            setEnabled(False)
+
+    def line_edit_text_changed(self):
+        """
+        Enable the OK button when all fields contain data
+        :return: None
+        """
+
+        if len(self.NewUserNameEntry.text()) > 3 and  len(self.NewUserUsernameEntry.text()) > 4 \
+                and len(self.NewUserPasswordEntry.text()) > 4 \
+                and len(self.NewUserEmailEntry.text()) > 5:
+            self.buttonBox.button(NewUserRegistrationWindow.QtGui.QDialogButtonBox.Ok).\
+                setEnabled(True)
 
     def create_new_user(self):
         """
