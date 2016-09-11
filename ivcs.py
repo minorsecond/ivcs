@@ -304,6 +304,20 @@ class ProjectsWindow(ManageProjectsWindow.QtGui.QDialog,
             if len(directory) > 0:
                 self.ProjectDirectoriesList.addItem(directory)
 
+    def update_tasks_list(self):
+        """
+        Update the list of projects
+        :return: None
+        """
+
+        self.TasksList.clear()
+        self.tasks = self.queries.query_all_tasks()
+
+        for task in self.tasks:
+            task_id = task[0]
+            task_name = task[1]
+            self.TasksList.addItem(task_name)
+
     def handle_remove_project_button(self):
         """
         Handles user clicking the remove project button
@@ -407,20 +421,38 @@ class AddTaskWindow(NewTaskForm.QtGui.QDialog, NewTaskForm.Ui_Dialog):
 
         self.new_task_name = self.TaskLineEdit.text()
         self.all_projects = self.queries.get_all_projects()
-        self.all_users = self.queries.query_all_users()
         self.all_tasks = self.queries.query_all_tasks()  # For blocker/blockee selection
-
-        for user in self.all_users:
-            self.AssigneeComboBox.addItem(user.username)
 
         for project in self.all_projects:
             self.ProjectComboBox.addItem(project[1])
 
         for task in self.all_tasks:  # TODO: prevent crossing blockers and blockees
-            self.BlockedByComboBox.addItem(task)
-            self.BlocksComboBox.addItem(task)
+            self.BlockedByComboBox.addItem(task[1])
+            self.BlocksComboBox.addItem(task[1])
 
-    # TODO: Populate combo boxes by querying the DB
+        # Handle OK button click
+        self.buttonBox.button(NewTaskForm.QtGui.QDialogButtonBox.Ok).clicked. \
+            connect(self.create_new_task)
+
+    def create_new_task(self):
+        """
+        Creates a new task and adds it to the DB.
+        :return:
+        """
+        task_name = self.TaskLineEdit.text()
+        project = self.ProjectComboBox.currentText()
+        blocked_by = self.BlockedByComboBox.currentText()
+        blocks = self.BlocksComboBox.currentText()
+        estimated_completion = self.EstimatedCompletionCalendar.selectedDate()
+        new_task = {
+            'task_name':            task_name,
+            'project':              project,
+            'blocks':               blocks,
+            'blocked_by':           blocked_by,
+            'estimated_completion': estimated_completion
+        }
+
+        self.queries.add_new_task(new_task)
 
 
 class AddProjectWindow(AddProject.QtGui.QDialog, AddProject.Ui_Dialog):

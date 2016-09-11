@@ -158,6 +158,7 @@ class Tasklists(Base):
     projects = relationship("Projects", secondary=project_tasks)
     project = Column(Integer, ForeignKey("Projects.id"))
     task_complete = Column(Boolean)
+    estimated_completion = Column(DateTime)
 
 
 class TaskDependencies(Base):

@@ -46,26 +46,13 @@
    <property name="geometry">
     <rect>
      <x>14</x>
-     <y>188</y>
+     <y>172</y>
      <width>49</width>
      <height>16</height>
     </rect>
    </property>
    <property name="text">
     <string>Project:</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_3">
-   <property name="geometry">
-    <rect>
-     <x>14</x>
-     <y>94</y>
-     <width>65</width>
-     <height>16</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Assignee:</string>
    </property>
   </widget>
   <widget class="QLabel" name="label_4">
@@ -85,7 +72,7 @@
    <property name="geometry">
     <rect>
      <x>14</x>
-     <y>142</y>
+     <y>108</y>
      <width>77</width>
      <height>16</height>
     </rect>
@@ -134,7 +121,7 @@
    <property name="geometry">
     <rect>
      <x>118</x>
-     <y>138</y>
+     <y>104</y>
      <width>119</width>
      <height>26</height>
     </rect>
@@ -150,21 +137,11 @@
     </rect>
    </property>
   </widget>
-  <widget class="QComboBox" name="AssigneeComboBox">
-   <property name="geometry">
-    <rect>
-     <x>118</x>
-     <y>90</y>
-     <width>119</width>
-     <height>26</height>
-    </rect>
-   </property>
-  </widget>
   <widget class="QComboBox" name="ProjectComboBox">
    <property name="geometry">
     <rect>
      <x>118</x>
-     <y>184</y>
+     <y>168</y>
      <width>119</width>
      <height>26</height>
     </rect>

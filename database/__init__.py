@@ -346,12 +346,11 @@ class DatabaseQueries:
         tasks = self.session.query(Tasklists).all()
 
         for task in tasks:
-            project_id = task.project
+            project_name = task.project
             task_id = task.id
-            task_name = task.name
-            task_list.append(task_name)
+            task_name = task.taskname
 
-            project = self.session.query(Projects).filter_by(id=project_id).one()
+            project = self.session.query(Projects).filter_by(name=project_name).one()
             project_name = project.name
 
             result = (project_name, task_name)
@@ -359,3 +358,27 @@ class DatabaseQueries:
 
         return task_list
 
+    def add_new_task(self, task_info):
+        """
+        Adds a new task to the DB
+        :return: None
+        """
+
+        task_name = task_info['task_name']
+        #task_description = task_info['task_description']  #TODO: Enable this
+        #task_output_directory = task_info['task_output_directory']  #TODO: Enable this
+        project = task_info['project']
+        estimated_completion = task_info['estimated_completion']
+
+        new_task = Tasklists(
+            taskname=task_name,
+            #task_description=None,  # TODO: Enable this
+            #task_output_directory=task_output_directory,
+            project=project,
+            #estimated_completion=estimated_completion
+        )
+
+        self.session.add(new_task)
+        self.session.commit()
+
+        # TODO: Add code to blocker/blockee
