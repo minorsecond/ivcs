@@ -401,6 +401,8 @@ class AddTaskWindow(NewTaskForm.QtGui.QDialog, NewTaskForm.Ui_Dialog):
         NewTaskForm.Ui_Dialog.__init__(self)
         self.setupUi(self)
 
+    # TODO: Populate combo boxes by querying the DB
+
 
 class AddProjectWindow(AddProject.QtGui.QDialog, AddProject.Ui_Dialog):
     """
