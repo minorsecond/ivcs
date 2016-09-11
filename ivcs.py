@@ -449,13 +449,14 @@ class CheckoutStatusWindow(CheckoutStatus.QtGui.QDialog, CheckoutStatus.Ui_Check
     Status window for checking out files
     """
 
-    def __init__(self):
+    def __init__(self, files_to_copy):
         super(CheckoutStatusWindow, self).__init__()
         CheckoutStatus.QtGui.QDialog.__init__(self)
         CheckoutStatus.Ui_CheckoutStatusWindow.__init__(self)
         self.setupUi(self)
-
         self.setFixedSize(self.size())  # Prevent resizing
+
+        self.files_to_copy = files_to_copy  # List of paths to copy
 
     def update_progress_bar(self, read, total):
         """
