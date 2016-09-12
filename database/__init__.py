@@ -416,3 +416,10 @@ class DatabaseQueries:
         self.session.commit()
 
         # TODO: Add code to blocker/blockee
+
+    def add_file_to_database(self, file_info):
+        """
+        Adds file to database
+        :param file_info:
+        :return:
+        """

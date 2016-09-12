@@ -156,16 +156,6 @@
      <string>View Changes</string>
     </property>
    </widget>
-   <widget class="QListView" name="RemoteFileListView">
-    <property name="geometry">
-     <rect>
-      <x>14</x>
-      <y>64</y>
-      <width>427</width>
-      <height>229</height>
-     </rect>
-    </property>
-   </widget>
    <widget class="QListView" name="LocalFileListVIew">
     <property name="geometry">
      <rect>
@@ -233,6 +223,16 @@
     </property>
     <property name="text">
      <string>Release</string>
+    </property>
+   </widget>
+   <widget class="QListWidget" name="RemoteFileListView">
+    <property name="geometry">
+     <rect>
+      <x>14</x>
+      <y>64</y>
+      <width>427</width>
+      <height>229</height>
+     </rect>
     </property>
    </widget>
   </widget>

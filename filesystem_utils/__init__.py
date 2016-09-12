@@ -172,3 +172,42 @@ class GeneralFunctions:
             application_path = os.path.join(os.path.dirname(__file__), '..')
 
         return application_path
+
+    def search_for_images(self, image_extensions, directory):
+        """
+        Searches for imagery in directory specified
+        :param image_extensions: list of extensions to search for
+        :param directory: directory to search
+        :return: List of image paths
+        """
+        buffer_size = 256
+        file_list = []
+        for root, dirs, files in os.walk(directory):
+            # Traverse the filesystem, adding files to the DB
+            for file in files:
+                sha1 = hashlib.sha1()
+                image_name = os.path.splitext(file)[0]
+                image_extension = os.path.splitext(file)[1]
+                if image_extension in image_extensions:
+                    image_path = os.path.join(root, file)
+                    image_size = os.path.getsize(image_path)
+                    image_modification_time = os.path.getmtime(image_path)
+                    image_first_seen = datetime.datetime.now()
+                    image_last_scanned = datetime.datetime.now()
+                    image_on_disk = True
+
+                    # Generate hash
+                    with open(image_path, 'rb') as f:
+                        data = f.read(buffer_size)
+                        if not data:
+                            break
+                        sha1.update(data)
+                        image_hash = sha1.hexdigest()
+
+                    result = (image_path, image_extension, image_size, image_hash,
+                              image_modification_time, image_first_seen, image_last_scanned,
+                              image_on_disk)
+                    file_list.append(result)
+
+        return file_list
+

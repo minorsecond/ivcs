@@ -26,15 +26,16 @@ from PyQt4.QtGui import QFileDialog, QDialog, QLineEdit
 import compressor
 import filesystem_utils
 
-
 class MainWindow(ivcs_mainwindow.QtGui.QMainWindow, ivcs_mainwindow.Ui_MainWindow):
     def __init__(self):
         ivcs_mainwindow.QtGui.QMainWindow.__init__(self)
         ivcs_mainwindow.Ui_MainWindow.__init__(self)
         self.setupUi(self)
         self.image_extensions = []
+
         self.general_functions = filesystem_utils.GeneralFunctions()
         self.app_dir = self.general_functions.get_application_path()
+        self.queries = DatabaseQueries(self.app_dir)
 
         self.setFixedSize(self.size())  # Prevent resizing
 
@@ -72,6 +73,15 @@ class MainWindow(ivcs_mainwindow.QtGui.QMainWindow, ivcs_mainwindow.Ui_MainWindo
         self.actionManage_Projects.triggered.connect(self.handle_manage_projects_click)
 
         self.open_database(self.username)
+        self.update_remote_files()
+
+    def update_remote_files(self):
+        """
+        Updates the list of remote files.
+        :return: None
+        """
+
+        pass
 
     def handle_checkout_button_click(self):
         """
@@ -128,7 +138,7 @@ class MainWindow(ivcs_mainwindow.QtGui.QMainWindow, ivcs_mainwindow.Ui_MainWindo
         :return: None
         """
 
-        proj_window = ProjectsWindow()
+        proj_window = ProjectsWindow(self.image_extensions)
         proj_window.show()
         proj_window.exec_()
 
@@ -243,9 +253,9 @@ class SettingsWindow(settings_window.QtGui.QDialog, settings_window.Ui_Dialog):
 class ProjectsWindow(ManageProjectsWindow.QtGui.QDialog,
                      ManageProjectsWindow.Ui_ManageProjectsWindow):
 
-    def __init__(self):
+    def __init__(self, image_extensions):
         super(ProjectsWindow, self).__init__()
-
+        self.image_extensions = image_extensions
         ManageProjectsWindow.QtGui.QDialog.__init__(self)
         ManageProjectsWindow.Ui_ManageProjectsWindow.__init__(self)
         self.setupUi(self)
@@ -253,8 +263,8 @@ class ProjectsWindow(ManageProjectsWindow.QtGui.QDialog,
         self.setFixedSize(self.size())  # Prevent resizing
 
         # Set the global application path
-        general_functions = filesystem_utils.GeneralFunctions()
-        self.app_dir = general_functions.get_application_path()
+        self.general_functions = filesystem_utils.GeneralFunctions()
+        self.app_dir = self.general_functions.get_application_path()
 
         # Get list of projects
         self.queries = DatabaseQueries(self.app_dir)
@@ -343,6 +353,25 @@ class ProjectsWindow(ManageProjectsWindow.QtGui.QDialog,
         directory = str(QFileDialog.getExistingDirectory(self, "Select Directory"))
 
         self.queries.add_project_directory(project, directory)
+
+        """Get a list of images in directory with correct extensions. The function returns a tuple
+        that looks like this:
+
+        (image_path, image_extension, image_size, image_hash, image_modification_time,
+        image_first_seen, image_last_scanned, image_on_disk)
+
+        """
+        images = self.general_functions.search_for_images(self.image_extensions, directory)
+
+        for image in images:
+            image_path = image[0]
+            image_extension = image[1]
+            image_size = image[2]
+            image_hash = image[3]
+            image_modification_time = image[4]
+            image_first_seen = image[5]
+            image_last_scanned = image[6]
+            image_on_disk = image[7]
 
         self.update_directories_list(project_id)
 

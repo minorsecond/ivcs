@@ -16,5 +16,6 @@ pyuic4 gui/ErrorMessage.ui -o gui/ErrorMessage.py
 pyuic4 gui/NewUserRegistrationWindow.ui -o gui/NewUserRegistrationWindow.py
 pyuic4 gui/LoginWindow.ui -o gui/LoginWindow.py
 pyuic4 gui/NewTaskForm.ui -o gui/NewTaskForm.py
+pyuic4 gui/LoadingImageryMetadata.ui -o gui/LoadingImageryMetadata.py
 
 #pyinstaller ivcs.py --onefile
