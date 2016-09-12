@@ -358,6 +358,16 @@ class DatabaseQueries:
 
         return task_list
 
+    def get_task_id(self, task_name):
+        """
+        Gets the ID number of the task name
+        :param task_name: string denoting task name
+        :return: Int
+        """
+
+        task = self.session.query(Tasklists).filter_by(taskname=task_name).one()
+        return task
+
     def add_new_task(self, task_info):
         """
         Adds a new task to the DB
@@ -379,6 +389,16 @@ class DatabaseQueries:
         )
 
         self.session.add(new_task)
+        self.session.commit()
+
+    def delete_task(self, task_name):
+        """
+        Delete a task from the database
+        :param task_name: Task.name
+        :return: None
+        """
+        task_id = (self.get_task_id(task_name)).id
+        self.session.query(Tasklists).filter_by(id=task_id).delete()
         self.session.commit()
 
         # TODO: Add code to blocker/blockee

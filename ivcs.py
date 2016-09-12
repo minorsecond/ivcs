@@ -272,8 +272,10 @@ class ProjectsWindow(ManageProjectsWindow.QtGui.QDialog,
         self.AddProjectDirectoryButton.clicked.connect(self.handle_project_add_dir_button)
         self.RemoveDirectoryFromProjectButton.clicked.connect(self.handle_delete_project_dir_button)
         self.AddTaskButton.clicked.connect(self.handle_add_task_button)
+        self.RemoveTaskButton.clicked.connect(self.handle_delete_task_button)
 
         self.update_projects_list()
+        self.update_tasks_list()
 
     def update_projects_list(self):
         """
@@ -405,6 +407,16 @@ class ProjectsWindow(ManageProjectsWindow.QtGui.QDialog,
         new_task_window.show()
         new_task_window.exec_()
 
+        self.update_tasks_list()
+
+    def handle_delete_task_button(self):
+        """Deletes the task selected"""
+
+        task_name = self.TasksList.currentItem().text()
+        self.queries.delete_task(task_name)
+
+        self.update_tasks_list()
+
 
 class AddTaskWindow(NewTaskForm.QtGui.QDialog, NewTaskForm.Ui_Dialog):
     """New Task Entry"""
@@ -445,15 +457,18 @@ class AddTaskWindow(NewTaskForm.QtGui.QDialog, NewTaskForm.Ui_Dialog):
         blocked_by = self.BlockedByComboBox.currentText()
         blocks = self.BlocksComboBox.currentText()
         estimated_completion = self.EstimatedCompletionCalendar.selectedDate()
-        new_task = {
-            'task_name':            task_name,
-            'project':              project,
-            'blocks':               blocks,
-            'blocked_by':           blocked_by,
-            'estimated_completion': estimated_completion
-        }
 
-        self.queries.add_new_task(new_task)
+        if len(task_name) > 0 and len(project) > 0:
+            print(len(task_name))
+            new_task = {
+                'task_name':            task_name,
+                'project':              project,
+                'blocks':               blocks,
+                'blocked_by':           blocked_by,
+                'estimated_completion': estimated_completion
+            }
+
+            self.queries.add_new_task(new_task)
 
 
 class AddProjectWindow(AddProject.QtGui.QDialog, AddProject.Ui_Dialog):
