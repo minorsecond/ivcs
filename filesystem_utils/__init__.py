@@ -191,7 +191,8 @@ class GeneralFunctions:
                 if image_extension in image_extensions:
                     image_path = os.path.join(root, file)
                     image_size = os.path.getsize(image_path)
-                    image_modification_time = os.path.getmtime(image_path)
+                    _image_modification_time = os.path.getmtime(image_path)
+                    image_modification_time = datetime.datetime.fromtimestamp(_image_modification_time)
                     image_first_seen = datetime.datetime.now()
                     image_last_scanned = datetime.datetime.now()
                     image_on_disk = True

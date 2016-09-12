@@ -352,7 +352,7 @@ class ProjectsWindow(ManageProjectsWindow.QtGui.QDialog,
         project_id = self.queries.get_project_id_by_name(project)
         directory = str(QFileDialog.getExistingDirectory(self, "Select Directory"))
 
-        self.queries.add_project_directory(project, directory)
+        new_directory_id = self.queries.add_project_directory(project, directory)
 
         """Get a list of images in directory with correct extensions. The function returns a tuple
         that looks like this:
@@ -372,6 +372,21 @@ class ProjectsWindow(ManageProjectsWindow.QtGui.QDialog,
             image_first_seen = image[5]
             image_last_scanned = image[6]
             image_on_disk = image[7]
+
+            image_metadata = {
+                'project_id':               project_id,
+                'directory_id':             new_directory_id,
+                'image_path':               image_path,
+                'image_extension':          image_extension,
+                'image_size':               image_size,
+                'image_hash':               image_hash,
+                'image_modification_time':  image_modification_time,
+                'image_first_seen':         image_first_seen,
+                'image_last_scanned':       image_last_scanned,
+                'image_on_disk':            image_on_disk
+            }
+
+            self.queries.add_file_to_database(image_metadata)
 
         self.update_directories_list(project_id)
 

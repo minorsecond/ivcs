@@ -237,7 +237,7 @@ class DatabaseQueries:
     def add_project_directory(self, project, path):
         """
         Adds a directory to the project
-        :return: None
+        :return: id of new row
         """
 
         current_directories = []
@@ -257,11 +257,15 @@ class DatabaseQueries:
             self.session.add(new_directory)
             self.session.commit()
 
+            return new_directory.id
+
         else:
             text = "User attempted to enter a directory that was already specified for project: " \
                    "{}".format(path)
             logging.warning(text)
             print(text)
+
+            return None
 
     def delete_project_directory(self, project_name, selected_dir):
         """
@@ -420,6 +424,34 @@ class DatabaseQueries:
     def add_file_to_database(self, file_info):
         """
         Adds file to database
-        :param file_info:
+        :param file_info: dict with structure:
+
+        'project_id':               project_id,
+                'directory_id':             new_directory_id,
+                'image_path':               image_path,
+                'image_extension':          image_extension,
+                'image_size':               image_size,
+                'image_hash':               image_hash,
+                'image_modification_time':  image_modification_time,
+                'image_first_seen':         image_first_seen,
+                'image_last_scanned':       image_last_scanned,
+                'image_on_disk':            image_on_disk
+
         :return:
         """
+        # First, check that file isn't already in DB.
+        new_file = Imagery(
+            project_id=file_info['project_id'],
+            directory_id=file_info['directory_id'],
+            image_path = file_info['image_path'],
+            image_extension = file_info['image_extension'],
+            image_size = file_info['image_size'],
+            image_hash = file_info['image_hash'],
+            image_modified_time = file_info['image_modification_time'],
+            image_first_seen = file_info['image_first_seen'],
+            image_last_scanned = file_info['image_last_scanned'],
+            image_on_disk = file_info['image_on_disk']
+        )
+
+        self.session.add(new_file)
+        self.session.commit()
