@@ -154,6 +154,7 @@ class Tasklists(Base):
     id = Column(Integer, primary_key=True)
     taskname = Column(String)
     task_description = Column(String)
+    task_input_directory = Column(String)
     task_output_directory = Column(String)
     projects = relationship("Projects", secondary=project_tasks)
     project = Column(Integer, ForeignKey("Projects.id"))
