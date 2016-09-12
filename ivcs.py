@@ -454,18 +454,21 @@ class AddTaskWindow(NewTaskForm.QtGui.QDialog, NewTaskForm.Ui_Dialog):
         """
         task_name = self.TaskLineEdit.text()
         project = self.ProjectComboBox.currentText()
-        blocked_by = self.BlockedByComboBox.currentText()
         blocks = self.BlocksComboBox.currentText()
-        estimated_completion = self.EstimatedCompletionCalendar.selectedDate()
+        blocked_by = self.BlockedByComboBox.currentText()
+        input_directory = self.InputDirectoryLineEdit.text()
+        output_directory = self.OutputDirectoryLineEdit.text()
+        #estimated_completion = self.EstimatedCompletionCalendar.selectedDate()
 
         if len(task_name) > 0 and len(project) > 0:
-            print(len(task_name))
             new_task = {
                 'task_name':            task_name,
                 'project':              project,
                 'blocks':               blocks,
                 'blocked_by':           blocked_by,
-                'estimated_completion': estimated_completion
+                'input_directory':      input_directory,
+                'output_directory':     output_directory,
+                #'estimated_completion': estimated_completion
             }
 
             self.queries.add_new_task(new_task)

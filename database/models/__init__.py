@@ -39,16 +39,6 @@ class Users(Base):
     checkouts = relationship("Checkouts")
     projects = relationship("Projects", secondary=user_projects)
 
-    #@validates('password')
-    #def _validate_password(self, key, password):
-    #    return getattr(type(self), key).type.validator(password)
-
-    #def verify_password(self, entered_pw):
-    #    pw = entered_pw.encode('utf-8')
-    #    pwhash = bcrypt.hashpw(pw, self.password)
-    #    print(pw_hash)
-    #    return self.password == pwhash
-
     def verify_password(self, password):
         pw = password.encode('utf-8')
         hashed_pw = (sha1(pw)).hexdigest()

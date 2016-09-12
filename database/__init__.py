@@ -372,19 +372,33 @@ class DatabaseQueries:
         """
         Adds a new task to the DB
         :return: None
+
+        The task_info dict is in the form:
+        new_task = {
+                'task_name':            task_name,
+                'project':              project,
+                'blocks':               blocks,
+                'blocked_by':           blocked_by,
+                'input_directory':      input_directory,
+                'output_directory':     output_directory,
+                'estimated_completion': estimated_completion
+            }
         """
 
         task_name = task_info['task_name']
         #task_description = task_info['task_description']  #TODO: Enable this
-        #task_output_directory = task_info['task_output_directory']  #TODO: Enable this
+        task_input_directory = task_info['input_directory']
+        task_output_directory = task_info['output_directory']  #TODO: Enable this
         project = task_info['project']
-        estimated_completion = task_info['estimated_completion']
+        #estimated_completion = task_info['estimated_completion']
 
         new_task = Tasklists(
             taskname=task_name,
             #task_description=None,  # TODO: Enable this
             #task_output_directory=task_output_directory,
             project=project,
+            task_input_directory=task_input_directory,
+            task_output_directory=task_output_directory
             #estimated_completion=estimated_completion
         )
 
