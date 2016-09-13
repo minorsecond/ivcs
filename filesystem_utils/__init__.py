@@ -197,13 +197,7 @@ class GeneralFunctions:
                     image_last_scanned = datetime.datetime.now()
                     image_on_disk = True
 
-                    # Generate hash
-                    with open(image_path, 'rb') as f:
-                        data = f.read(buffer_size)
-                        if not data:
-                            break
-                        sha1.update(data)
-                        image_hash = sha1.hexdigest()
+                    image_hash = self.get_file_hash(image_path)
 
                     result = (image_path, image_extension, image_size, image_hash,
                               image_modification_time, image_first_seen, image_last_scanned,
@@ -212,3 +206,16 @@ class GeneralFunctions:
 
         return file_list
 
+    def get_file_hash(self, file):
+        """Generate SHA1 hash of file"""
+
+        buffer_size = 256
+        sha1 = hashlib.sha1()
+
+        # Generate hash
+        with open(file[0], 'rb') as f:
+            data = f.read(buffer_size)
+            sha1.update(data)
+            image_hash = sha1.hexdigest()
+
+        return image_hash

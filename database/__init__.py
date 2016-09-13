@@ -455,3 +455,22 @@ class DatabaseQueries:
 
         self.session.add(new_file)
         self.session.commit()
+
+    def get_all_remote_files(self):
+        """Get a list of all remote files"""
+        files = []
+        file_query = self.session.query(Imagery).all()
+
+        for file in file_query:
+            file_path = file.image_path
+            file_project = file.project_id
+
+            files.append((file_path, file_project))
+
+        return files
+
+    def check_file_hash(self, file, current_hash):
+        """Checks the file hash in the db against current hash"""
+        file = self.session.query(Imagery).filter_by(image_path=file).one()
+
+        return file.image_hash == current_hash

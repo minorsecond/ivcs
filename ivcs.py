@@ -22,7 +22,8 @@ from database.passwords import PasswordHash
 from gui import commit_message_window, ivcs_mainwindow, settings_window, view_message_window, \
     CheckoutStatus, ManageProjectsWindow, AddProject, ErrorMessage, NewUserRegistrationWindow, \
     LoginWindow, NewTaskForm
-from PyQt4.QtGui import QFileDialog, QDialog, QLineEdit
+from PyQt4.QtGui import QFileDialog, QDialog, QLineEdit, QBrush
+from PyQt4.QtCore import Qt
 import compressor
 import filesystem_utils
 
@@ -81,7 +82,24 @@ class MainWindow(ivcs_mainwindow.QtGui.QMainWindow, ivcs_mainwindow.Ui_MainWindo
         :return: None
         """
 
-        pass
+        files = self.queries.get_all_remote_files()
+        hash_list = []
+
+        list_widget_index = 0
+        for file in files:
+            self.RemoteFileListView.addItem(file[0])
+
+            # Change text color of changed files to red
+            if not self.general_functions.get_file_hash(file):
+                self.RemoteFileListView.item(list_widget_index).setSelected(True)
+
+                for item in self.RemoteFileListView.selectedItems():
+                    item.setForeground(QBrush(Qt.red, Qt.SolidPattern))
+
+        list_widget_index += 1
+
+
+
 
     def handle_checkout_button_click(self):
         """
@@ -141,6 +159,8 @@ class MainWindow(ivcs_mainwindow.QtGui.QMainWindow, ivcs_mainwindow.Ui_MainWindo
         proj_window = ProjectsWindow(self.image_extensions)
         proj_window.show()
         proj_window.exec_()
+
+        self.update_remote_files()
 
 
 class SettingsWindow(settings_window.QtGui.QDialog, settings_window.Ui_Dialog):
