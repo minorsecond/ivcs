@@ -22,7 +22,7 @@ from database.passwords import PasswordHash
 from gui import commit_message_window, ivcs_mainwindow, settings_window, view_message_window, \
     CheckoutStatus, ManageProjectsWindow, AddProject, ErrorMessage, NewUserRegistrationWindow, \
     LoginWindow, NewTaskForm
-from PyQt4.QtGui import QFileDialog, QDialog, QLineEdit, QBrush
+from PyQt4.QtGui import QFileDialog, QDialog, QLineEdit, QBrush, QAbstractItemView
 from PyQt4.QtCore import Qt
 import compressor
 import filesystem_utils
@@ -56,6 +56,10 @@ class MainWindow(ivcs_mainwindow.QtGui.QMainWindow, ivcs_mainwindow.Ui_MainWindo
             self.PushButton.setEnabled(False)
 
         else:
+
+            # Enable multiple selection
+            self.RemoteFileListView.setSelectionMode(QAbstractItemView.ExtendedSelection)
+            self.LocalFileListVIew.setSelectionMode(QAbstractItemView.ExtendedSelection)
             # Load current settings
             self.config_file_path = os.path.join(self.app_dir, 'ivcs.ini')
             self.config = configparser.ConfigParser()
@@ -68,20 +72,50 @@ class MainWindow(ivcs_mainwindow.QtGui.QMainWindow, ivcs_mainwindow.Ui_MainWindo
 
             # Handle main window buttons
             self.CheckoutButton.clicked.connect(self.handle_checkout_button_click)
+            self.UpdateAllButton.clicked.connect(self.handle_update_all_button)
+
 
         # Menu Bar Actions
         self.actionSettings.triggered.connect(self.handle_settings_click)
         self.actionManage_Projects.triggered.connect(self.handle_manage_projects_click)
 
         self.open_database(self.username)
+        self.handle_update_all_button()
+
+    def handle_update_all_button(self):
+        """
+        Updates lists in main window
+        :return: None
+        """
+
         self.update_remote_files()
+        self.update_local_files()
+
+        projects = self.queries.get_all_projects()
+
+        for project in projects:
+            project_id = project[0]
+            project = project[1]
+            self.ProjectSelection.addItem(project)
+
+            tasks = self.queries.get_task_by_project(project_id)
+
+            for task in tasks:
+                self.TaskSelection.addItem(task)
+
+    def update_local_files(self):
+        """
+        Updates the list of local files
+        :return: None
+        """
+        pass  # TODO: FInish this
 
     def update_remote_files(self):
         """
         Updates the list of remote files.
         :return: None
         """
-
+        self.RemoteFileListView.clear()
         files = self.queries.get_all_remote_files()
         hash_list = []
 
@@ -279,6 +313,9 @@ class ProjectsWindow(ManageProjectsWindow.QtGui.QDialog,
         ManageProjectsWindow.QtGui.QDialog.__init__(self)
         ManageProjectsWindow.Ui_ManageProjectsWindow.__init__(self)
         self.setupUi(self)
+
+        # Select first item in list by default
+        #self.ProjectsList.item(0).setSelected(True)
 
         self.setFixedSize(self.size())  # Prevent resizing
 
@@ -518,6 +555,7 @@ class AddTaskWindow(NewTaskForm.QtGui.QDialog, NewTaskForm.Ui_Dialog):
         """
         task_name = self.TaskLineEdit.text()
         project = self.ProjectComboBox.currentText()
+        project_id = self.queries.get_project_id_by_name(project)
         blocks = self.BlocksComboBox.currentText()
         blocked_by = self.BlockedByComboBox.currentText()
         input_directory = self.InputDirectoryLineEdit.text()
@@ -528,6 +566,7 @@ class AddTaskWindow(NewTaskForm.QtGui.QDialog, NewTaskForm.Ui_Dialog):
             new_task = {
                 'task_name':            task_name,
                 'project':              project,
+                'project_id':           project_id,
                 'blocks':               blocks,
                 'blocked_by':           blocked_by,
                 'input_directory':      input_directory,

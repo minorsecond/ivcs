@@ -362,6 +362,17 @@ class DatabaseQueries:
 
         return task_list
 
+    def get_task_by_project(self, project_id):
+        """Get list of tasks by project"""
+        taskllist = []
+        tasks = self.session.query(Tasklists).filter_by(project_id=project_id).all()
+        for task in tasks:
+            task_name = task.taskname
+            print(task_name)
+            taskllist.append(task_name)
+
+        return taskllist
+
     def get_task_id(self, task_name):
         """
         Gets the ID number of the task name

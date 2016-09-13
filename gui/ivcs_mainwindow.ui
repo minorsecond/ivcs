@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1024</width>
-    <height>680</height>
+    <height>650</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -18,7 +18,7 @@
     <property name="geometry">
      <rect>
       <x>14</x>
-      <y>42</y>
+      <y>28</y>
       <width>995</width>
       <height>16</height>
      </rect>
@@ -34,7 +34,7 @@
     <property name="geometry">
      <rect>
       <x>12</x>
-      <y>352</y>
+      <y>338</y>
       <width>995</width>
       <height>16</height>
      </rect>
@@ -50,7 +50,7 @@
     <property name="geometry">
      <rect>
       <x>782</x>
-      <y>294</y>
+      <y>282</y>
       <width>113</width>
       <height>32</height>
      </rect>
@@ -63,7 +63,7 @@
     <property name="geometry">
      <rect>
       <x>14</x>
-      <y>322</y>
+      <y>308</y>
       <width>997</width>
       <height>16</height>
      </rect>
@@ -76,7 +76,7 @@
     <property name="geometry">
      <rect>
       <x>904</x>
-      <y>622</y>
+      <y>608</y>
       <width>113</width>
       <height>32</height>
      </rect>
@@ -89,7 +89,7 @@
     <property name="geometry">
      <rect>
       <x>784</x>
-      <y>622</y>
+      <y>608</y>
       <width>113</width>
       <height>32</height>
      </rect>
@@ -102,7 +102,7 @@
     <property name="geometry">
      <rect>
       <x>14</x>
-      <y>370</y>
+      <y>356</y>
       <width>995</width>
       <height>251</height>
      </rect>
@@ -111,9 +111,9 @@
    <widget class="QComboBox" name="ProjectSelection">
     <property name="geometry">
      <rect>
-      <x>831</x>
-      <y>6</y>
-      <width>177</width>
+      <x>712</x>
+      <y>20</y>
+      <width>300</width>
       <height>26</height>
      </rect>
     </property>
@@ -125,7 +125,7 @@
     <property name="geometry">
      <rect>
       <x>8</x>
-      <y>6</y>
+      <y>16</y>
       <width>113</width>
       <height>32</height>
      </rect>
@@ -138,7 +138,7 @@
     <property name="geometry">
      <rect>
       <x>902</x>
-      <y>294</y>
+      <y>282</y>
       <width>113</width>
       <height>32</height>
      </rect>
@@ -151,7 +151,7 @@
     <property name="geometry">
      <rect>
       <x>14</x>
-      <y>60</y>
+      <y>46</y>
       <width>995</width>
       <height>233</height>
      </rect>
@@ -160,9 +160,9 @@
    <widget class="QComboBox" name="TaskSelection">
     <property name="geometry">
      <rect>
-      <x>834</x>
-      <y>338</y>
-      <width>177</width>
+      <x>712</x>
+      <y>330</y>
+      <width>300</width>
       <height>26</height>
      </rect>
     </property>
