@@ -44,19 +44,11 @@ class MainWindow(ivcs_mainwindow.QtGui.QMainWindow, ivcs_mainwindow.Ui_MainWindo
             logging.warning("Couldn't find configuration file at {}, after it should have been "
                             "automatically created.".format(self.app_dir))
 
-            # Disable all GUI elements until a branch is set and scanned
-            self.RemoteChangesListView.setEnabled(False)
-            self.LocalFileListVIew.setEnabled(False)
-            self.RemoteChangesListView.setEnabled(False)
-            self.LocalChangesListView.setEnabled(False)
-
-            self.CheckoutButton.setEnabled(False)
-            self.ViewRemoteCommitButton.setEnabled(False)
-            self.CommitButton.setEnabled(False)
-            self.PushButton.setEnabled(False)
+            self.disable_all_fields()
 
         else:
 
+            #if raise_login_window():
             # Enable multiple selection
             self.RemoteFileListView.setSelectionMode(QAbstractItemView.ExtendedSelection)
             self.LocalFileListVIew.setSelectionMode(QAbstractItemView.ExtendedSelection)
@@ -81,6 +73,18 @@ class MainWindow(ivcs_mainwindow.QtGui.QMainWindow, ivcs_mainwindow.Ui_MainWindo
 
         self.open_database(self.username)
         self.handle_update_all_button()
+
+    def disable_all_fields(self):
+        # Disable all GUI elements until a branch is set and scanned
+        self.RemoteChangesListView.setEnabled(False)
+        self.LocalFileListVIew.setEnabled(False)
+        self.RemoteChangesListView.setEnabled(False)
+        self.LocalChangesListView.setEnabled(False)
+
+        self.CheckoutButton.setEnabled(False)
+        self.ViewRemoteCommitButton.setEnabled(False)
+        self.CommitButton.setEnabled(False)
+        self.PushButton.setEnabled(False)
 
     def handle_update_all_button(self):
         """
@@ -933,11 +937,11 @@ def raise_main_window():
     :return: None
     """
 
-    #main = ivcs_mainwindow.QtGui.QApplication(sys.argv)
+    main = ivcs_mainwindow.QtGui.QApplication(sys.argv)
     window = MainWindow()
     window.show()
-    window.exec_()
-    #sys.exit(main.exec_())
+    #window.exec()
+    sys.exit(main.exec_())
 
 
 def raise_new_user_window():
@@ -949,6 +953,18 @@ def raise_new_user_window():
     new_user_window.show()
     new_user_window.exec_()
 
+
+def raise_login_window():
+    """
+    Raise the login window
+    :return:
+    """
+
+    # Instantiate the first windows
+    #login = LoginWindow.QtGui.QDialog(sys.argv)
+    login_window = UserLoginWindow()
+    login_window.show()
+    return login_window.exec_()
 
 def main():
     """
@@ -972,11 +988,7 @@ def main():
         initialize_config(app_dir)
         logging.info("Created configuration file at {}".format(app_dir))
 
-    # Instantiate the first windows
-    login = LoginWindow.QtGui.QApplication(sys.argv)
-    login_window = UserLoginWindow()
-    login_window.show()
-    login.exec_()
+    raise_main_window()
 
 if __name__ == '__main__':
     main()
