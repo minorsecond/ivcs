@@ -19,7 +19,7 @@
      <rect>
       <x>14</x>
       <y>42</y>
-      <width>429</width>
+      <width>485</width>
       <height>16</height>
      </rect>
     </property>
@@ -62,8 +62,8 @@
    <widget class="QPushButton" name="CheckoutButton">
     <property name="geometry">
      <rect>
-      <x>210</x>
-      <y>296</y>
+      <x>272</x>
+      <y>610</y>
       <width>113</width>
       <height>32</height>
      </rect>
@@ -75,9 +75,9 @@
    <widget class="Line" name="line_2">
     <property name="geometry">
      <rect>
-      <x>12</x>
+      <x>514</x>
       <y>334</y>
-      <width>999</width>
+      <width>497</width>
       <height>16</height>
      </rect>
     </property>
@@ -96,22 +96,6 @@
     </property>
     <property name="text">
      <string>Local Changes</string>
-    </property>
-    <property name="alignment">
-     <set>Qt::AlignCenter</set>
-    </property>
-   </widget>
-   <widget class="QLabel" name="LocalChanges_2">
-    <property name="geometry">
-     <rect>
-      <x>14</x>
-      <y>356</y>
-      <width>429</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Remote Changes</string>
     </property>
     <property name="alignment">
      <set>Qt::AlignCenter</set>
@@ -143,34 +127,11 @@
      <string>Commit</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="ViewRemoteCommitButton">
-    <property name="geometry">
-     <rect>
-      <x>332</x>
-      <y>608</y>
-      <width>113</width>
-      <height>32</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>View Changes</string>
-    </property>
-   </widget>
    <widget class="QListView" name="LocalFileListVIew">
     <property name="geometry">
      <rect>
       <x>584</x>
       <y>64</y>
-      <width>427</width>
-      <height>229</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QListView" name="RemoteChangesListView">
-    <property name="geometry">
-     <rect>
-      <x>14</x>
-      <y>378</y>
       <width>427</width>
       <height>229</height>
      </rect>
@@ -215,8 +176,8 @@
    <widget class="QPushButton" name="ReleaseButton">
     <property name="geometry">
      <rect>
-      <x>330</x>
-      <y>296</y>
+      <x>392</x>
+      <y>610</y>
       <width>113</width>
       <height>32</height>
      </rect>
@@ -230,8 +191,8 @@
      <rect>
       <x>14</x>
       <y>64</y>
-      <width>427</width>
-      <height>229</height>
+      <width>485</width>
+      <height>543</height>
      </rect>
     </property>
    </widget>
